@@ -1,0 +1,225 @@
+<style>
+    .form-control{
+        background-color:aliceblue;
+        border: 0.5px solid #bce4d0
+
+    }
+</style>
+
+<main class="main-wrap">
+    <section class="content-main">
+        <div class="content-header">
+            <div> 
+                <h2 class="content-title card-title">Add Products</h2>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+              <form action="/admin/add-products" method="POST" enctype="multipart/form-data" onsubmit="return validation()">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="name" class="form-label">Brand:</label>
+                      <input type="text" class="form-control"  name="brand" id="brandname" onkeyup="validateBrand()">
+                      <span id="brand" class="text-danger"></span>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="name" class="form-label">Product Name:</label>
+                      <input type="text" class="form-control" id="productname" name="productname" onkeyup="validateProductName()">
+                      <span id="name" class="text-danger"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group mt-3">
+                      <label for="categoryDescription">Category</label>
+                      <select class="form-control" id="categoryDescription" name="category" required>
+                        <option value="" selected disabled>Select category description</option>
+                        <% category.forEach(element => { %>
+                            <option value="<%= element._id %>"><%= element.category %></option>
+                          <% }) %>
+                        <!-- Add options for categories here -->
+                      </select>
+                      <div class="invalid-feedback">
+                        Please select a category description.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group mt-3">
+                      <label for="subcategoryDescription">Subcategory</label>
+                      <select class="form-control" id="subcategoryDescription" name="subcategory" required>
+                        <option value="" selected disabled>Select subcategory description</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Please select a subcategory description.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="price" class="form-label">Price:</label>
+                      <input type="number" class="form-control" id="price" name="price" min="0" onkeyup="validPrice()">
+                      <span id="Price" class="text-danger"></span>
+                    </div>
+                  </div> 
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="price" class="form-label">DealPrice:</label>
+                      <input type="number" class="form-control" id="dealprice" name="dealprice" min="0" onkeyup="validateDealPrice()">
+                      <span id="DealPrice" class="text-danger"></span>
+                    </div>
+                  </div> 
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="stock" class="form-label">Stock:</label>
+                      <input type="number" class="form-control" id="stock" name="stock" min="1" onkeyup="validStock()">
+                      <span id="Stock" class="text-danger"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="image" class="form-label">Image:</label>
+                  <input type="file" class="form-control" id="image" name="image" multiple required>
+                </div>
+                <div class="mb-3">
+                  <label for="description" class="form-label">Description:</label>
+                  <textarea class="form-control" style="height: 100px" name="Description" id="Description" onkeyup="validateProductDescription()"></textarea>
+                  <span id="productdescription" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success m-3">Add Product</button>
+              </form>
+            </div>
+          </div>
+          
+
+    </section>
+</main>
+<script>
+      
+      $('#categoryDescription').on('change', function() {
+        var categoryId = $(this).val(); 
+        var subcategorySelect = $('#subcategoryDescription'); 
+          $.ajax({
+          url: '/admin/get-subcategories', 
+          method: 'POST',
+          data: { categoryId: categoryId }, 
+          success: function(subcategories) {
+               subcategorySelect.empty();
+            $.each(subcategories, function(index, subcategory) {
+              subcategorySelect.append($('<option>').val(subcategory._id).text(subcategory.sub_category));
+            });
+          }
+        });
+      });
+    let errorName = document.getElementById('name');
+    let errorBrand = document.getElementById('brand')
+    let errorPrice = document.getElementById('Price');
+    let errorStock = document.getElementById('Stock');
+    let errorDealprice = document.getElementById('DealPrice');
+    let errordescription = document.getElementById('productdescription');
+    function validateProductName() {
+            const name = document.getElementById('productname').value;
+            if (name == "") {
+                errorName.innerHTML = '*required'
+                return false
+            }
+            if (!name.match(/^[a-zA-Z0-9 ]*$/)) {
+                errorName.innerHTML = '*'
+                return false
+            }
+            if (name.match(/^[ ]*$/)) {
+                errorName.innerHTML = '*required'
+                return false
+            }
+            errorName.innerHTML = null
+            return true
+        }
+    function validateBrand(){
+        const brand = document.getElementById('brandname').value;
+        if (brand == "") {
+                errorBrand.innerHTML = '*required'
+                return false
+            }
+            if (!brand.match(/^[a-zA-Z0-9 ]*$/)) {
+                errorBrand.innerHTML = '*'
+                return false
+            }
+            if (brand.match(/^[ ]*$/)) {
+                errorBrand.innerHTML = '*required'
+                return false
+            }
+            errorBrand.innerHTML = null
+            return true
+    }
+    function validPrice() {
+            const price = document.getElementById('price').value
+            if (price == "") {
+                errorPrice.innerHTML = '*required'
+                return false
+            }
+            errorPrice.innerHTML = null
+            return true
+        }
+     function validStock() {
+            const stock = document.getElementById('stock').value
+            if (stock == "") {
+                errorStock.innerHTML = '*required'
+                return false
+            }
+            if(parseInt(stock) < 0){
+              errorStock.innerHTML = "Please provide a valid stock"
+              return false
+            }
+            errorStock.innerHTML = null
+            return true
+        }
+    function validateDealPrice(){
+      const price = document.getElementById('price').value
+        const dealprice =document.getElementById('dealprice').value
+
+  
+      
+        if(dealprice == ""){
+            errorDealprice.innerHTML = '*required'
+            return false
+        }
+        if(parseInt(dealprice) > parseInt(price)){
+          errorDealprice.innerHTML ='Dealprice must be lessthan price'
+          return false;
+
+        }
+        
+        errorDealprice.innerHTML = null;
+        return true;
+    }    
+    function validateProductDescription() {
+            const name = document.getElementById('Description').value;
+            if (name == "") {
+                errordescription.innerHTML = '*required'
+                return false
+            }
+             if (name.length < 10) {
+
+                errordescription.innerHTML = "enter proper description "
+                return false
+            }
+            errordescription.innerHTML = null
+            return true
+        }
+        function validation() {
+            if (!validateProductName() ||!validateBrand() || !validateProductDescription()  || !validPrice() ||  !validateSize() || !validStock()) {
+                return false
+            }
+            return true
+        }
+
+
+    
+</script>

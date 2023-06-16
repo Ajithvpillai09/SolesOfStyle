@@ -1,0 +1,169 @@
+
+<style>
+    .card-login {
+   max-width: 350px;
+}
+.card-login:hover{
+    box-shadow: 0 15px 25px rgba(53, 53, 53, 0.6);
+}
+.card-title{
+  text-align: center;
+  font-size: 45px;
+  font-weight: 600;
+  background-image: linear-gradient(to left, #88d5cd, #0f6152);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+</style>
+<body>
+   <main>
+       <section class="content-main mt-80 mb-80">
+        <h4 class="card-title mb-4">Soles Of Style</h4>
+           <div class="card mx-auto card-login">
+                   <div class="card-body ">
+                    <% if(errMessage != ""){ %>
+                       <div class="alert alert-warning alert-dismissible fade show" role="alert" style="padding: 10px;">
+                         <%=  errMessage %>
+                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 1rem;">
+                         </button>
+                       </div>
+                    <% } %>
+                     <form class="mt-5" action="/signup" method="post" onsubmit="return validation()">
+                    <div class="form-group mb-3">
+                        <input type="text" class="form-control" aria-describedby="nameHelp" name="name" id="Name" onkeyup="validateName()" placeholder="Your Full Name"value="<%= typeof name != 'undefined' ? name : '' %>">
+                        <span id="name" class="text-danger"></span>
+                   </div>
+                    <div class="form-group mb-3">
+                        <input type="email" class="form-control" aria-describedby="emailHelp" name="email" id="Email" onkeyup="validEmail()" placeholder="Your Email" value="<%= typeof email != 'undefined' ? email : '' %>">
+                        <span id="email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" class="form-control" id="phonenumber" onkeyup="validPhonenumber()" name="phone" placeholder="Your Phone Number" value="<%= typeof phone != 'undefined' ? phone : '' %>">
+                        <span id="phonenumbers" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" class="form-control" id="password" onkeyup="validPassword()" name="password" placeholder="Set Password">
+                        <span id="passwords" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" class="form-control" id="cpassword" onkeyup="validcPassword()" name="cpassword" placeholder="Confirm Password">
+                        <span id="cpasswords" class="text-danger"></span>
+                    </div>
+                    
+                       <div class="mb-4">
+                           <button type="submit" class="btn btn-primary w-100 "> SignIn </button>
+                       </div>
+                   </form>
+                   <p class="text-center mb-2">Already have an account? <a href="/login">Login</a></p>
+               </div>
+           </div>
+       </section> 
+       <footer class="main-footer text-center">
+           <p class="font-xs">
+               <script>
+               document.write(new Date().getFullYear())
+               </script> ©, Soles Of Styles  .
+           </p>
+           <p class="font-xs mb-30">All rights reserved</p>
+       </footer>
+   </main>
+   <script>
+
+    var errorName = document.getElementById('name')
+    var errorEmail = document.getElementById('email')
+     var errorPassword = document.getElementById('passwords')
+     var errorcPassword = document.getElementById('cpasswords')
+     var errorPhonenumber = document.getElementById('phonenumbers')
+    
+    function validateName() {
+        const name = document.getElementById('Name').value;
+        if (name == "") {
+            errorName.innerHTML = 'Enter your name'
+            return false
+        }
+        if (!name.match(/^[a-zA-Z ]*$/)) {
+            errorName.innerHTML = 'Numbers are not allowed'
+            return false
+        }
+        errorName.innerHTML = null
+        return true
+    }
+
+    function validEmail() {
+        const email = document.getElementById('Email').value
+        if (email == "") {
+            errorEmail.innerHTML = "Enter your email address"
+            return false
+        }
+        if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            errorEmail.innerHTML = 'Enter a proper email address'
+            return false
+        }
+        errorEmail.innerHTML = null
+        return true
+    }
+
+    function validPassword() {
+        const psd = document.getElementById('password').value
+        if (psd == "") {
+            errorPassword.innerHTML = "Enter a password"
+            return false
+        }
+        if (psd.length < 5) {
+			
+            errorPassword.innerHTML = "Password should be more than five characters"
+            return false
+        }
+        errorPassword.innerHTML = null
+        return true
+    
+    }
+
+        function validcPassword() {
+        const cpsd = document.getElementById('cpassword').value
+        const psd = document.getElementById('password').value
+        if(psd != cpsd){
+            errorcPassword.innerHTML = "Password not matching"
+            return false
+        }
+        if (cpsd == "") {
+            errorcPassword.innerHTML = "Confirm your password"
+            return false
+        }
+        errorcPassword.innerHTML = null
+        return true
+    }    
+
+     function validPhonenumber() {
+        const mob = document.getElementById('phonenumber').value
+        if (mob == "") {
+            errorPhonenumber.innerHTML = "Enter a phonenumber"
+            return false
+        }
+        if (mob.length < 10 || !mob.match(/^\d*$/)) {
+            errorPhonenumber.innerHTML = "Please Enter the valid phone number"
+            return false
+        }
+
+        if (mob.length > 10) {
+            errorPhonenumber.innerHTML = "Please Enter the valid phone number"
+            return false
+        }
+        errorPhonenumber.innerHTML = null
+        return true
+    }
+
+    function validation() {
+        if (!validateName() || !validEmail() || !validPassword() || !validcPassword() || !validPhonenumber()) {
+            return false
+        }
+        return true
+    }
+
+</script>
+
+
+
+
+   

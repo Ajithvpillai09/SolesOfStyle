@@ -1,0 +1,857 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+<style>
+   
+    .select {
+ --color: #00A97F;
+ /* padding: 0.8em 1.7em; */
+ background-color: transparent;
+ border-radius: .3em;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ transition: .5s;
+ font-weight: 400;
+ font-size: 17px;
+ border: 1px solid;
+ font-family: inherit;
+ color: var(--color);
+ z-index: 1;
+}
+
+.select::before, .button::after {
+ content: '';
+ display: block;
+ width: 24px;
+ height: 2px;
+ transform: translate(-50%, -50%);
+ position: absolute;
+ border-radius: 50%;
+ z-index: -1;
+ background-color: var(--color);
+ transition: 1s ease;
+}
+
+.select::before {
+ top: -1em;
+ left: -1em;
+}
+
+.select::after {
+ left: calc(100% + 1em);
+ top: calc(100% + 1em);
+}
+
+.select:hover::before, .button:hover::after {
+ height: 410px;
+ width: 410px;
+}
+
+.select:hover {
+ color: rgb(10, 25, 30);
+}
+
+.select:active {
+ filter: brightness(.8);
+}
+ 
+
+
+.address-button{
+    border-width: inherit;
+    background-color: white;
+  }
+  .bi-pen-fill::before{
+    color: darkcyan;
+  }
+  .bi-trash3-fill::before {
+    color: darkcyan;
+    content: "\f78a";
+}
+    table {
+        border-collapse: collapse;
+        border: none;
+    }
+    
+    th,
+    td {
+        border: none;
+    }
+    .hover-div {
+        border-top: 1px solid #f8f8f8;
+        background: #f8f8f8;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        margin: 10px 0px;
+    }
+    .hover-div {
+        border-top: 1px solid #f8f8f8;
+        background: #f8f8f8;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        padding: 10px;
+    }
+    
+    .hover-div:hover {
+        -webkit-transform: translateY(-20px);
+        -ms-transform: translateY(-20px);
+        transform: translateY(-20px);
+        box-shadow: 0 22px 43px rgba(0, 0, 0, 0.32);
+        cursor: pointer;
+        border-radius: 5px;
+    }
+  .hover-container .content {
+  display: none;
+}
+
+.hover-container:hover .content {
+  display: block;
+}
+
+.title{
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+ </style>
+
+<div class="page-wrapper">
+    <div class="main ">
+        <div class="page-header text-center" >
+            <div class="container mt-5">
+                <h5 class="title">Choose delivery address</h5>
+            </div><!-- End .container -->
+        </div>
+        <div class="container mt-50 ">
+            <div class="row"> 
+               
+                <div class="col-lg-6 col-md-12">
+                 <%if(address.length == 0){%>
+                    <div class="container">
+                        <div class="row justify-content-center mt-5">
+                          <div class="col-md-8 text-center">
+                            <h1 class="mb-4">No address found</h1>
+                            <p class="lead mb-4">Please add a new address to proceed with your order.</p>
+                            <button class="select" onclick="showAddModal()">Add address</button>
+                          </div>
+                        </div>
+                      </div>
+                <%}else{%>
+                    <div class="col-lg-12 ">
+                        <button class="select" onclick="showAddModal()">Add address</button>
+                        <% for (let i=0; i < address.length; i++) { %>
+                            <div class="card m-3 mb-lg-0 border-0">
+                                <!--  -->
+                                <div class="product-body hover-div">
+                                    <div class="row ">
+                                        <div class="col-9" >
+                                            <p><%=address[i].radio%></p>
+                                            <p style="font-weight:bold;"><%= `${address[i].firstname} ${address[i].lastname}` %></p> 
+                                        </div>
+                                    </div>
+                                     <div class="row"> 
+                                            <div class="col-9 ">
+                                                   <p><%= address[i].mobile%>| <%=address[i].email%></p>  
+                                                   <p><%= address[i].streetaddress %></p> 
+                                                   <p><%= address[i].appartment %></p> 
+                                                   <p><%= address[i].state %>,<%= address[i].town %></p>
+                                                   <p> <%= address[i].zip %></p>
+                                                  
+                                            </div>      
+                                     </div>
+                                     <div class="row">
+                                        <div class="mt-4" style="display: flex; justify-content: space-between;">
+                                            <button class="select" id="selectButton" data-coupon-id="<%= address[i]._id%>" onclick="confirmAddress('<%= address[i]._id%>')">Select</button>
+                                           
+                                        </div>
+
+                                     </div>
+                                </div>
+                                <!--  -->                      
+                            </div>
+                        <%}%><!-- End .product-body -->
+                     </div>
+                     <%}%>
+                     <!--  -->
+                   
+                 
+                     <div class="col-lg-6 col-md-12">
+                        <div class="mb-30 mt-50" id="couponAdding">
+                           <div class="heading_s1 mb-3">
+                              <h4>Available Coupons</h4>
+                           </div>
+                        <div class="coupons-container">
+                            <%if(coupon.length > 0){%>
+                                <%coupon.forEach(item=>{%>
+                                   <span class="badge rounded-pill alert-success m-2"><%=item.couponCode%></span>
+                                <%})%>
+
+                            <%}%>                                                                                                           
+                        </div>
+                        <div class="heading_s1 my-3">
+                            <h4>Apply Coupon</h4>
+                        </div>
+                        <div class="total-amount">
+                            <div class="left">
+                                <div class="coupon">
+                                    <form id="applyform">
+                                        <div class="form-row row justify-content-center">
+                                            <div class="form-group col-lg-6">
+                                                <input class="font-medium" name="coupon" placeholder="Enter Your Coupon" required>
+                                            </div>
+                                            <input
+                                            type="text"
+                                            class="form-control"
+                                            name="userId"
+                                           id="userId"
+                                            value="<%=cartItems[0].userId%>"
+                                            hidden
+                                            
+                                          />
+                                            <div class="form-group col-lg-6">
+                                                <button class="btn  btn-sm " type="sumbit"><i class="fi-rs-label mr-10"></i>Apply</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                     <!--  -->
+                </div>
+               
+                    
+                 <div class="col-lg-4 col-md-12 ml-5">
+                   <div class="border p-md-4 p-30 border-radius cart-totals">
+                    <!--  -->
+                   
+                    <!--  -->
+                     <div class="heading_s1 mb-3">
+                        <h4>Cart Totals</h4>
+                     </div>
+                    <div class="table-responsive">
+                        <div class="col">
+                            <div class="order_review">
+                                <div class="table-responsive order_table text-center">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">Product</th>
+    
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           <%cartItems.forEach((item) => { %>
+                                                
+                                            
+                                            <tr>
+                                                   <td class="image product-thumbnail"><img src="/uploads/<%= item.productInfo.images[0] %>" alt="#"></td>
+                                                <td> 
+                                                   
+                                                    <h5><a href="shop-product-full.html"><%= item.productInfo.productname %> <span style="color: rgb(12, 12, 10); margin: 2px;">x</span><%= item.quantity %></a></h5> 
+                                                </td>
+                                               
+                                            </tr>
+                                            <% });%>
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                              
+                               
+                            </div>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="cart_total_label">Cart Subtotal</td>
+                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand" id="totalPrice">₹<%=cartTotal.total%></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Shipping</td>
+                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Tax</td>
+                                    <td class="cart_total_amount" id="adTax">₹<%=cartTotal.totalTax%></td>
+                                </tr>
+                                <tr>
+                                  <%if(cartTotal.discount > 0){%>
+                                    <td class="cart_total_label">Coupon Discount</td>
+                                    <td class="cart_total_amount" id="discount">₹<%=cartTotal.discount%></td>
+                                     <td><button class="select" style="font-size: 10px;" onclick="removeCoupon('<%=cartTotal.discount%>','<%=cartItems[0].userId%>')"> remove coupon</button></td>
+                                    <%}%>
+                                    
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Total</td>
+                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" id="taxWithTotal">₹<%=cartTotal.totalWithTax-cartTotal.discount%></span></strong></td>
+                                </tr>
+                            </tbody>
+                            
+                        </table>
+                        
+                        </div>
+                   
+                   
+                    
+                </div>
+                
+            </div>
+           <!-- add address modal -->
+           <div class="modal fade" id="addAddresModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title " id="exampleModalLabel">Add Address</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 
+                </div>
+                <div class="modal-body">
+                    <form id="addAddress">
+                        <span id="error" class="text-danger"></span>
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputEmail4">First Name*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="firstname"
+                              placeholder=""
+                              id="firstName"
+                              required
+                            />
+                           
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputEmail4">Last Name*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="lastname"
+                              placeholder=""
+                              id="lastName"
+                              required
+                            />
+                           
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputEmail">Email Address*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="email"
+                              placeholder=""
+                              id="email"
+                              required
+                            />
+                            <span id="editemail" class="text-danger"></span>
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputPhone">Phone*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="mobile"
+                              placeholder=""
+                              id="phoneNumber"
+                              required
+                            />
+                           
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputStreetAddress"
+                              >Street Address*</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="streetAddress"
+                              placeholder=""
+                             id="streetAddress"
+                              required
+                            />
+                          </div>
+                          <div class="mb-3 col-md-6">
+                            <label class="form-label" for="inputAppartment">Appartment*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="appartment"
+                              placeholder=""
+                             id="appartment"
+                              required
+                            />
+                          </div>
+                         
+                        </div>
+                        <div class="row">
+                          <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputCity">Town / City*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="town"
+                             id="town"
+                              required
+                            />
+                          </div>
+                          <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputState">State*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="state"
+                              id="state"
+                              required
+                            />
+                          </div>
+                          <div class="mb-3 col-md-4">
+                            <label class="form-label" for="inputZip">Zip*</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="zip"
+                              id="zip"
+                              required
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label" for="type">Type of address?*</label>
+                            <div>
+                              <label class="form-check form-check-inline">
+                                <input
+                                  class="form-check-input"
+                                  type="radio"
+                                  name="radio"
+                                  value="Home"
+                                  id="home"
+                                  required
+                                />
+                                <span class="form-check-label"> Home </span>
+                              </label>
+                              <label class="form-check form-check-inline">
+                                <input
+                                  class="form-check-input"
+                                  type="radio"
+                                  name="radio"
+                                  value="Office"
+                                  id="office"
+                                  required
+                                />
+                                <span class="form-check-label"> Office </span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary bg-info border-0" id="saveAddress" ><i class="bi bi-save"></i> Save Changes</button>
+                            </div>
+                        
+                      </form>
+                </div>
+                </div>                            
+              </div>
+            </div>
+           <!--  -->
+
+           <!-- edit modal -->
+            <!--  -->
+            <!-- <div class="modal fade" id="editAddresModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title " id="exampleModalLabel">Edit Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                   
+                  </div>
+                  <div class="modal-body">
+                      <form id="editAddress" action="" method="post" >
+                          <span id="editError" class="text-danger"></span>
+                          <div class="row">
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputEmail4">First Name*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="firstname"
+                                placeholder=""
+                                id="editFirstName"
+                                required
+                              />
+                              
+                            </div>
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputEmail4">Last Name*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="lastname"
+                                placeholder=""
+                                id="editLastName"
+                                required
+                              />
+                             
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputEmail">Email Address*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="email"
+                                placeholder=""
+                                id="editEmail"
+                                required
+                              />
+                             
+                            </div>
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputPhone">Phone*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="mobile"
+                                placeholder=""
+                                id="editPhoneNumber"
+                                required
+                              />
+                              
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputStreetAddress"
+                                >Street Address*</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="streetAddress"
+                                placeholder=""
+                               id="editStreetAddress"
+                                required
+                              />
+                            </div>
+                            <div class="mb-3 col-md-6">
+                              <label class="form-label" for="inputAppartment">Appartment*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="appartment"
+                                placeholder=""
+                               id="editAppartment"
+                                required
+                              />
+                            </div>
+                           
+                          </div>
+                          <div class="row">
+                            <div class="mb-3 col-md-4">
+                              <label class="form-label" for="inputCity">Town / City*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="town"
+                               id="editTown"
+                                required
+                              />
+                            </div>
+                            <div class="mb-3 col-md-4">
+                              <label class="form-label" for="inputState">State*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="state"
+                                id="editState"
+                                required
+                              />
+                            </div>
+                            <div class="mb-3 col-md-4">
+                              <label class="form-label" for="inputZip">Zip*</label>
+                              <input
+                                type="text"
+                                class="form-control"
+                                name="zip"
+                                id="editZip"
+                                required
+                              />
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label" for="type">Type of address?*</label>
+                              <div>
+                                <label class="form-check form-check-inline">
+                                  <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="radio"
+                                    value="Home"
+                                    id="editHome"
+                                    required
+                                  />
+                                  <span class="form-check-label"> Home </span>
+                                </label>
+                                <label class="form-check form-check-inline">
+                                  <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="radio"
+                                    value="Office"
+                                    id="editOffice"
+                                    required
+                                  />
+                                  <span class="form-check-label"> Office </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary bg-info border-0" id="editAddress" ><i class="bi bi-save"></i> Save Changes</button>
+                              </div>
+                          
+                        </form>
+                  </div>
+                  </div>                            
+                </div>
+              </div> -->
+             <!--  -->
+           <!--  -->
+            
+            </div>
+           
+        </div>
+        
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+
+
+<script>
+ var error = document.getElementById('error')
+    function showAddModal(){
+        var modal = $("#addAddresModal");
+        error.innerHTML = ""
+        modal.modal("show");
+
+    }
+//   function showEditModal(addressId,userId){
+//       $.ajax({
+//         url:`/get-address-details`,
+//         type:'POST',
+//         data:{addressId,userId},
+//         success:(response=>{
+//           $('#editFirstName').val(response.firstname);
+//           $('#editLastName').val(response.lastname);
+//           $('#editEmail').val(response.email);
+//           $('#editPhoneNumber').val(response.mobile);
+//           $('#editState').val(response.state);
+//           $('#editStreetAddress').val(response.streetaddress);
+//           $('#editAppartment').val(response.appartment);
+//           $('#editTown').val(response.town);
+//           $('#editZip').val(response.zip);
+//           if(response.radio === "Home") $('#editHome').prop('checked', true);
+//           else  $('#editOffice').prop('checked', true);
+
+//            })
+//      }).then(()=>{
+//      var modal = $('#editAddresModal');
+//       modal.modal("show");
+//       var form = document.getElementById('editAddress');
+//      form.addEventListener('submit', function(event) {
+//         if (!form.checkValidity()) {
+//           event.preventDefault();
+//           event.stopPropagation();
+//           return
+//         }
+//         let formData = $('#editAddress').serialize();
+//         formData += `&addressId=${addressId}&userId=${userId}`;
+//        $.ajax({
+//           url:'/edit-address-checkout',
+//           type:'PATCH',
+//           data:formData,
+//           success:(response=>{
+//             if(response.status){
+//               Swal.fire({
+//                     icon: 'success',
+//                     title: 'Address edited succesfully',
+//                     showConfirmButton: false,
+//                     timer: 2000
+//                  }).then(() => {
+//                     location.reload();
+//               });
+//             }
+//           })
+
+//         })
+//       });
+//     })
+// }
+
+
+    $("#saveAddress").click(function(event) {
+        event.preventDefault();
+       
+       
+        let firstName = $('#firstName').val();
+        let lastName = $('#lastName').val();
+        let email = $('#email').val();
+        let phoneNumber = $('#phoneNumber').val();
+        let streetAddress = $('#streetAddress').val();
+        let appartment = $('#appartment').val();
+        let town = $('#town').val();
+        let state = $('#state').val();
+        let zip = $('#zip').val(); 
+        let  home = $('#home').is(':checked');
+        let office = $('#office').is(':checked');
+        let radio = home ? 'home':'office'
+        console.log(radio);
+        if((!firstName || !lastName || !email || !phoneNumber || !streetAddress || !appartment || !town || !state || !zip) && (!home || !office)){
+            error.innerHTML = "Please fill all required fields"
+            return false;
+
+        }
+            $.ajax({
+            url:'add-address',
+            type:'PATCH',
+            data:$('#addAddress').serialize(),
+            success:(response=>{
+                if(response.status){
+                    Swal.fire({
+                    icon: 'success',
+                    title: 'Address addedd succesfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                 }).then(() => {
+                    location.reload();
+              });
+                }
+            })
+        })
+})
+
+
+function confirmAddress(addressId){
+     console.log(addressId,"address iddddddddd");
+    // let discount = document.getElementById('discount').innerHTML
+    // discount = discount.replace("₹", "")
+   
+    $.ajax({
+        url:'/confirm-address',
+        data:{
+           addressId:addressId,
+          //  discount:discount
+        },
+        type:'POST',
+        success:(response)=>{
+           location.href = '/proceed-to-checkout'
+        }
+    })
+}
+
+
+$('#applyform').submit((e)=>{
+    console.log("haii im editinggg");
+    e.preventDefault()
+    var coupon = $('#applyform').serialize();
+    let total = document.getElementById('taxWithTotal').innerText;
+    total = parseInt(total.replace("₹", ""))
+    coupon += "&total=" + total;
+
+    $.ajax({
+        url:'/apply-coupon',
+        type:'post',
+        data:coupon,
+        success:(response =>{
+            console.log(response);
+            if(response.status){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+
+                }).then(()=>{
+                  location.reload()
+                })
+              
+                // document.getElementById('discount').innerHTML = "₹"+response.discountAmount
+                // document.getElementById('taxWithTotal').innerHTML  ="₹"+response.discountPrice
+                // location.reload()
+            }else{
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title:response.message,
+                    showConfirmButton: false,
+                    timer: 1500
+
+                })
+
+            }
+        })
+      
+    })
+})
+
+function removeCoupon(discount,userId){
+  console.log(discount);
+  console.log(userId);
+  Swal.fire({
+       title: 'Confirm your choice',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#d33',
+       cancelButtonColor: '#4CAF50',
+       confirmButtonText: 'Yes, remove it!'
+  }).then((result)=>{
+    if(result.isConfirmed){
+          $.ajax({
+        url:'/remove-coupon',
+        type:'PATCH',
+        data:{discount,userId},
+        success:(response=>{
+          if(response.status){
+            Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'coupon removed successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+
+                }).then(()=>{
+                  location.reload()
+                })
+              
+
+          }
+
+    })
+  })
+
+    }
+   
+
+  })
+  
+}
+
+
+
+
+</script>
+

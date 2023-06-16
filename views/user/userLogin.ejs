@@ -1,0 +1,113 @@
+
+<style>
+    .card-login {
+   max-width: 350px;
+}
+.card-login:hover{
+    box-shadow: 0 15px 25px rgba(53, 53, 53, 0.6);
+}
+.card-title{
+  text-align: center;
+  font-size: 45px;
+  font-weight: 600;
+  background-image: linear-gradient(to left, #88d5cd, #0f6152);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+</style>
+<body>
+   <main>
+       <section class="content-main mt-80 mb-80">
+        <h4 class="card-title mb-4">Soles Of Style</h4>
+           <div class="card mx-auto card-login">
+                   <div class="card-body ">
+                    <% if(errMessage != ""){ %>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="padding: 10px;">
+                          <%=  errMessage %>
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 1rem;">
+                          </button>
+                        </div>
+                     <% } %>
+                 <form class="mt-5" action="/login" method="post" onsubmit="return validation()">
+                    <div class="form-group mb-3">
+                        <input type="email" class="form-control" aria-describedby="emailHelp" name="email" id="Email" onkeyup="validEmail()" placeholder="Enter Email"  value="<%= typeof email != 'undefined' ? email : '' %>">
+                        <span id="email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input type="password" class="form-control" id="password" onkeyup="validPassword()" name="password" placeholder="Enter Password">
+                        <span id="passwords" class="text-danger"></span>
+                    </div>
+                       <div class="mb-4">
+                           <button type="submit" class="btn btn-primary w-100 ">LOGIN </button>
+                       </div>
+                 </form>
+                        <div class="divider-text-center mt-15 mb-15">
+                            <span> or</span>
+                      </div>
+                  <div class="mb-4">
+                    <a href="/getotp"><button type="submit" class="btn btn-primary w-100 ">LOGIN WITH OTP</button></a>
+                  </div>
+                   <p class="text-center mb-2">Don't have an account? <a href="/signup">Register now</a></p>
+               </div>
+           </div>
+       </section> 
+       <footer class="main-footer text-center">
+           <p class="font-xs">
+               <script>
+               document.write(new Date().getFullYear())
+               </script> ©, Soles Of Styles .
+           </p>
+           <p class="font-xs mb-30">All rights reserved</p>
+       </footer>
+   </main>
+   <script>
+
+    var errorEmail = document.getElementById('email')
+     var errorPassword = document.getElementById('passwords')
+    
+    
+
+    function validEmail() {
+        const email = document.getElementById('Email').value
+        if (email == "") {
+            errorEmail.innerHTML = "Enter your email address"
+            return false
+        }
+        if (!email.match(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/)) {
+            errorEmail.innerHTML = 'Enter a proper email address'
+            return false
+        }
+        errorEmail.innerHTML = null
+        return true
+    }
+
+    function validPassword() {
+        const psd = document.getElementById('password').value
+        if (psd == "") {
+            errorPassword.innerHTML = "Enter a password"
+            return false
+        }
+        if (psd.length < 5) {
+			
+            errorPassword.innerHTML = "Enter valid password";
+            return false
+        }
+        errorPassword.innerHTML = null
+        return true
+    
+    }
+
+       
+    function validation() {
+        if (!validEmail() || !validPassword() ) {
+            return false
+        }
+        return true
+    }
+
+</script>
+
+
+
+   

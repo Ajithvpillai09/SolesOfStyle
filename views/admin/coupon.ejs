@@ -1,0 +1,385 @@
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+<style>
+ 
+.btn-sm {
+    border: none;
+    margin:2px;
+}
+</style>
+<main class="main-wrap">
+<section class="content-main">
+    <div class="content-header">
+        <h2 class="content-title">Manage Coupons </h2>
+        <div id="loader" >
+            <span ></span>
+          </div>
+        <!-- <div>
+            <button class="btn btn-primary" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Add Coupon</button>
+            
+        </div> -->
+    </div>
+    <div class="card mb-4">
+        <!-- <header class="card-header">
+            <h4>Coupons</h4>
+        </header> -->
+        <div class="card-body">
+            <div>
+                <button class="btn btn-primary my-4" id="profile-tab"  type="button" >Add Coupon</button>
+                
+            </div>
+            <!--  -->
+            <div class="card-header " id="coupon-card" style="display: none;">
+                <h5 class="card-title mb-0"></h5>
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form method="post" action="/admin/add-coupon" onsubmit="return validation()">
+                                <div class="mb-4">
+                                    <label for="discount" class="form-label">Discount</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="discount" name="discount" onkeyup="discountValidation()">
+                                    <span id="erdiscount" class="text-danger"></span>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Mininmum Puchace</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="minPurchase" name="minPurchase" onkeyup="minValidation()"> 
+                                    <span id="erpurchase" class="text-danger"></span> 
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Expires on</label>
+                                    <input type="date" placeholder="Type here" class="form-control" id="expiresOn" name="expires"  onkeyup="dateValidation()">  
+                                    <span id="erdate" class="text-danger"></span> 
+                                </div>
+                               
+                                <div class="form-group mt-3">
+                                    <button type="submit" class="btn btn-primary btn-block">Generate Coupon</button>
+                                  </div>
+                           </form>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--  -->
+            <%if(coupon){%>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr >
+                            <th>No</th>
+                            <th scope="col">Coupon Code</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Minimum Purchase</th>
+                            <th scope="col">Expire Date</th>
+                            <th scope="col" class="text-center">Actions</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%coupon.forEach((item,index)=>{%>
+
+                       
+                        <tr>
+                            <td><%=index+1%></td>
+                            <td><b><%=item.couponCode%></b></td>
+                            <td><%=item.discount%>%</td>
+                            <td>₹<%=item.minPurchase%></td>
+                            <td><span class="badge rounded-pill alert-warning"><%= new Date(item.expires).toLocaleString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                hour12: true
+                              }) %></span></td>
+                            <td class="text-center">
+                                <%if(item.statusEnable){%>
+                                <button class=" btn-sm btn-danger" onclick="changeStatus('<%=item._id%>')">Disable</button>
+                                <%}else{%>
+                                <button class="btn-sm btn-success" onclick="changeStatus('<%=item._id%>')">Enable</button>
+                                <%}%>
+                                <button class=" btn-sm btn-secondary edit-coupon-btn" id="editCouponBtn" data-coupon-id="<%=item._id %>" >Edit</button>
+
+                            </td>
+                        </tr>
+                        
+                      <% })%>
+                        
+                    </tbody>
+                 
+                </table>
+            </div>
+            <%}%>
+        </div>
+    </div>
+    <!--  -->
+    <div class="modal fade" id="editCouponModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Coupon </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+           
+          </div>
+          <div class="modal-body">
+            <form id="cpn-edit-form" method="post"> 
+              <span id="editError" class="text-danger"></span>
+              
+              <div class="mb-3">
+                <label for="couponCode" class="form-label fs-4">Coupon Code</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-tag-fill"></i></span>
+                  <input type="text" id="couponCode" name="couponCode" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="cpnDiscount" class="form-label fs-4">Discount</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-percent"></i></span>
+                  <input type="text" id="cpnDiscount" name="discount" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="minPurchase" class="form-label fs-4">Minimum Purchase</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                  <input type="text" id="minkPurchase" name="minPurchase" class="form-control" required>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="cpnExp" class="form-label fs-4">Expires On</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                  <input type="date" id="cpnExp" name="expires" class="form-control" required>
+                </div>
+              </div>
+              <input type="text" id="couponId" name="couponId" class="form-control" hidden>
+           
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary bg-info border-0" id="saveCouponBtn" ><i class="bi bi-save"></i> Save Changes</button>
+            </div>
+          </form>
+          </div>
+          </div>                            
+        </div>
+      </div>
+    </div>
+    <!--  -->
+     <!-- card end// -->
+</section>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+$(document).ready(function() {
+  // Event listener for "Edit" button click
+  $(".edit-coupon-btn").click(function() {
+    var couponId = $(this).data("coupon-id");
+     console.log(couponId,"coupon IDDDDDDDDDDD");
+    var modal = $("#editCouponModal");
+
+    // Make an AJAX request to retrieve the modal content dynamically
+    $.ajax({
+      url: `/admin/coupon-details/${couponId}`, // Replace with the appropriate URL to fetch the modal content
+      type: "GET",
+      // data: { couponId: couponId },
+      success: function(response) {
+         console.log(response);
+        // // Update the modal content with the fetched data
+
+        $('#couponCode').val(response.couponCode)
+        $('#cpnDiscount').val(response.discount)
+        $('#minkPurchase').val(response.minPurchase)
+           var dateValue = response.expires;
+           var date = new Date(dateValue);
+           var year = date.getFullYear();
+           var month = ('0' + (date.getMonth() + 1)).slice(-2);
+           var day = ('0' + date.getDate()).slice(-2);
+           
+           var formattedDate = year + '-' + month + '-' + day;
+           $('#cpnExp').val(formattedDate);
+           $('#couponId').val(response._id)
+
+
+       
+        modal.modal("show"); // Show the modal
+      },
+      error: function() {
+        console.log("Error occurred while retrieving the modal content.");
+      }
+    });
+  });
+});
+
+$("#saveCouponBtn").click(function(event) {
+  event.preventDefault();
+  let couponCode = $('#couponCode').val();
+  let discount = $('#cpnDiscount').val();
+  let minPurchase = $('#minkPurchase').val();
+  let expires = $('#cpnExp').val();
+  let couponId = $('#couponId').val();
+  console.log(couponCode, "coupon code");
+  console.log(discount, "discount");
+  console.log(minPurchase, "min purchase");
+  console.log(expires, "expires on");
+  console.log(couponId, "coupon id");
+  let editError = document.getElementById('editError')
+  
+  // Check if any of the required fields are empty
+  if (!couponCode || !discount || !minPurchase || !expires) {
+    // Display an error message or handle the empty fields
+    editError.innerHTML ='Please fill in all the required fields'
+    return; // Stop the execution of the function
+  }
+
+  $.ajax({
+    url: '/admin/edit-coupon',
+    type: 'PATCH',
+    data: {
+      couponCode,
+      discount,
+      minPurchase,
+      expires,
+      couponId
+    },
+    success: (response => {
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Coupon edited successfully',
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        location.href = '/admin/coupons';
+      });
+
+    })
+  });
+});
+
+
+
+
+
+        
+
+    
+    document.getElementById("profile-tab").addEventListener("click", function() {
+    if(document.getElementById("coupon-card").style.display == "block"){
+        document.getElementById("coupon-card").style.display = "none"
+    }else{
+        document.getElementById("coupon-card").style.display = "block"
+    }
+    });
+
+    
+
+
+
+   
+    const errorPuchase = document.getElementById('erpurchase')
+    const errorDate = document.getElementById('erdate')
+    const errorCode = document.getElementById('ercode')
+    const errorDiscount = document.getElementById('erdiscount')
+
+   
+
+    function nameValidation(){
+        const coupon = document.getElementById('couponCode').value;
+            if (coupon == "") {
+                errorCode.innerHTML = '*required'
+                return false
+            }
+            errorCode.innerHTML = null
+            return true
+          }
+     function discountValidation(){
+        const discount = document.getElementById('discount').value;
+            if (discount == "") {
+                errorDiscount.innerHTML = '*required'
+                return false
+            }
+            else if(discount>60){
+              errorDiscount.innerHTML = '*not allowed! reduce percent'
+                return false
+            }
+             errorDiscount.innerHTML = null
+            return true
+
+          }
+
+    function dateValidation(){
+            const expireDate = document.getElementById('expiresOn').value;
+            if (expireDate == "") {
+                errorDate.innerHTML = '*required'
+                return false
+            }
+            errorDate.innerHTML = null
+            return true
+        }
+    function minValidation(){
+            const minPuchase = document.getElementById('minPurchase').value;
+            if (minPuchase  == "") {
+                errorPuchase.innerHTML = '*required'
+                return false
+            }
+            if (!/^\d+(\.\d{1,2})?$/.test(minPuchase)) {
+                errorPuchase.innerHTML = 'Invalid input. Please enter a valid number.';
+                return false;
+            }
+
+            errorPuchase.innerHTML = null
+            return true
+        }
+
+
+
+
+
+     function validation() {
+            if (!discountValidation() || !nameValidation() || !dateValidation() ||! minValidation()) {
+                return false
+            }
+            return true
+        }
+    
+   function changeStatus(id){
+    Swal.fire({
+    title: 'Are you sure ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#4CAF50',
+    confirmButtonText: 'Yes, change it!'
+  }).then((result)=>{
+    if(result.isConfirmed){
+      $.ajax({
+        url:'/admin/change-coupon-status',
+        type:'PATCH',
+        data:{
+            id:id
+        },
+        success:(response=>{
+            if(response.status){
+              Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Status changed succesfully',
+              showConfirmButton: false,
+              timer: 1500
+          }).then(()=>{
+            location.href ='/admin/coupons'
+          })
+            }
+        })
+      })
+    }
+  })
+   }
+  
+</script>

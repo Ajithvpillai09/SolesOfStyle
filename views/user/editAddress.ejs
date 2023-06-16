@@ -1,0 +1,179 @@
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+<style>
+  
+    .address-button{
+    border-width: inherit;
+    background-color: white;
+    }
+    .card {
+    border: none !important;
+  }
+</style>
+
+<div class="container pt-50">
+    <div class="card card-sm" id="edit-address" >
+        <div class="card-header">
+            <h3>EDIT ADDRESS</h3>
+        </div>
+        <div class="card-body p-5 m-5 ">
+          <form id="editAddress" onsubmit="return editValidation()">
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputEmail4">First Name*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="firstname"
+                  placeholder=""
+                  id="editfirstname"
+                  value="<%=address.firstname%>"
+                  onkeyup="validateEditName()"
+                />
+                <span id="editfirst" class="text-danger"></span>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputEmail4">Last Name*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="lastname"
+                  placeholder=""
+                  id="editlastName"
+                  value="<%=address.lastname%>"
+                  onkeyup="validateEditLastName()"
+                />
+                <span id="editlast" class="text-danger"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputEmail">Email Address*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="email"
+                  placeholder=""
+                  id="editEmail"
+                  value="<%=address.email%>"
+                  onkeyup="validEditEmail()"
+                />
+                <span id="editemail" class="text-danger"></span>
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputPhone">Phone*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="mobile"
+                  placeholder=""
+                  id="editphonenumber"
+                  value="<%=address.mobile%>"
+                  onkeyup="validEditPhonenumber()"
+                />
+                <span id="editnumbers" class="text-danger"></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputStreetAddress"
+                  >Street Address*</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  name="streetAddress"
+                  placeholder=""
+                  value="<%=address.streetaddress%>"
+                  required
+                />
+              </div>
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputAppartment">Appartment*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="appartment"
+                  placeholder=""
+                  value="<%=address.appartment%>"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label class="form-label" for="inputCity">Town / City*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="town"
+                  value="<%=address.town%>"
+                  required
+                />
+              </div>
+              <div class="mb-3 col-md-4">
+                <label class="form-label" for="inputState">State*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="state"
+                  value="<%=address.state%>"
+                  required
+                />
+              </div>
+              <div class="mb-3 col-md-2">
+                <label class="form-label" for="inputZip">Zip*</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="zip"
+                  value="<%=address.zip%>"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="type">Type of address?*</label>
+                <div>
+                  <label class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="radio"
+                      value="Home"
+                      required
+                    />
+                    <span class="form-check-label"> Home </span>
+                  </label>
+                  <label class="form-check form-check-inline">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="radio"
+                      value="Office"
+                      required
+                    />
+                    <span class="form-check-label"> Office </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" id="save-button-address" value="<%=address._id%>" class="btn btn-primary">
+              Save
+            </button>
+            <a href="/my-account">
+              <button
+              type="button"
+              id="cancel-button-address"
+              class="btn btn-secondary"
+            >
+              Cancel
+            </button>
+            </a>
+            
+          </form>
+        </div>
+      </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+<script src="/javascripts/myAccount.js"></script>

@@ -1,0 +1,78 @@
+
+<main class="main-wrap">
+    <section class="content-main">
+        <div class="content-header">
+            <div> 
+                <h2 class="content-title card-title">Add Category Images</h2>
+                
+            </div>
+           
+        </div>
+    
+    <div class="card">
+    <div class="card-body">
+      <form action="" method="POST" enctype="multipart/form-data" id="addBannerForm" novalidate>
+        <div class="form-group">
+          <label for="title">Category</label>
+          <select class="form-control" id="categoryDescription" name="category" required>
+            <option value="" selected disabled>Select category description</option>
+            <% category.forEach(element => { %>
+                <option value="<%= element.category %>"><%= element.category %></option>
+              <% }) %>
+          </select>
+          <div class="invalid-feedback">
+            Please enter category.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Image:</label>
+          <input type="file" class="form-control" id="image" name="image" multiple required>
+          <div class="invalid-feedback">
+            Please choose an image for the category.
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Banner</button>
+      </form>
+    </div>
+  </div>
+    </section>
+</main>
+  
+  <!-- Add Banner Form Validation -->
+  <script>
+    (function() {
+      'use strict';
+  
+      var form = document.getElementById('addBannerForm');
+      var titleInput = document.getElementById('categoryDescription');
+      var imageInput = document.getElementById('image');
+  
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+  
+        form.classList.add('was-validated');
+      });
+  
+      titleInput.addEventListener('invalid', function(event) {
+        event.target.classList.add('is-invalid');
+        event.target.nextElementSibling.textContent = 'Please enter a category .';
+      });
+  
+      titleInput.addEventListener('input', function(event) {
+        event.target.classList.remove('is-invalid');
+        event.target.nextElementSibling.textContent = '';
+      });
+      imageInput.addEventListener('invalid', function(event) {
+        event.target.classList.add('is-invalid');
+        event.target.nextElementSibling.textContent = 'Please choose an image .';
+      });
+  
+      imageInput.addEventListener('input', function(event) {
+        event.target.classList.remove('is-invalid');
+        event.target.nextElementSibling.textContent = '';
+      });
+    })();
+  </script>

@@ -1,0 +1,154 @@
+<main class="main-wrap">
+    <section class="content-main">
+        <div class="content-header mb-2">
+            <div>
+                <h2 class="content-title card-title">Banner Info</h2>
+            </div>
+            <!-- <div  class="text-right" style="float: right">
+                <a href="" class="btn btn-success m-3" style="width: fit-content">Add Banner</a>
+            </div> -->
+        </div>
+        <table class="table table-striped table-light mt-5" id="myTable">
+            <thead>
+              <tr style="width: fit-content">
+                <th scope="col">Title</th>
+                <th scope="col">Description</th>
+                <th>Image</th>
+                <th>Option</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr >
+                <td ><%=bannerData.title%></td>
+                <td ><%=bannerData.description%></td>        
+                <td>
+                    <% bannerData.images.forEach(item => { %>
+                      <img
+                        style="width:100px; height: 80px; "
+                        src="/uploads/<%= item %>"
+                        alt="image"
+                      />
+                    <% }); %>
+                  </td>
+                <td>
+                  <a href="/admin/edit-banner/<%=bannerData._id%>" class="btn btn-primary">Edit</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--  -->
+          <div class="content-header mb-2">
+            <div>
+                <h2 class="content-title card-title">Category Images</h2>
+            </div>
+            <div  class="text-right" style="float: right">
+                <a href="/admin/add-cat-images" class="btn btn-success m-3" style="width: fit-content">Add Category Image</a>
+            </div>
+        </div>
+        <table class="table table-striped table-light mt-5" id="myTable">
+            <thead>
+              <tr style="width: fit-content">
+                <th scope="col">Category</th>
+                <th scope="col">Image</th>
+                <th>Option</th>
+              </tr>
+            </thead>
+            <tbody>
+                <%catImages.forEach(item=>{%>
+
+                
+              <tr >
+                <td ><%=item.category%></td>        
+                <td>
+                   
+                      <img
+                        style="width:100px; height: 80px; "
+                        src="/uploads/<%=item.image%>"
+                        alt="image"
+                      />
+                   
+                  </td>
+                <td>
+                  <button class="btn btn-primary" onclick="toggleEdit('<%=item._id%>')">EDIT</button>
+                  <div id="editToggle_<%=item._id%>" style="display: none;"> 
+                    <!--  -->
+                    <div class="card">
+                      <div class="card-body">
+                        <form action="/admin/edit-cat-image/<%=item._id %>" method="POST"   enctype="multipart/form-data" id="addBannerForm_<%=item._id%>" onsubmit="return validation('<%=item._id%>')" novalidate>
+                          <div class="form-group">
+                            <label for="title">Category</label>
+                            <select class="form-control" id="categoryDescription" name="category" required>
+                              <option value="<%=item.category%>"><%=item.category%></option>
+                              <% category.forEach(element => { %>
+                                <option value="<%= element._id %>"><%= element.category %></option>
+                              <% }) %>
+                           </select>
+                            <div class="invalid-feedback">
+                              Please enter category.
+                            </div>
+                          </div>
+                          <div class="mb-3">
+                            <label for="image" class="form-label">Image:</label>
+                            <input type="file" class="form-control" id="image_<%=item._id%>" name="image" onchange="chekImage('<%=item._id%>')"  multiple required>
+                            <div id="error_message_<%=item._id%>" class="invalid-feedback">
+                              Please choose an image for the category
+                            </div>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                      </div>
+                    </div>
+                    <!--  -->
+                  </div>
+                </td>
+              </tr>
+              <%})%>
+            </tbody>
+          </table>
+          <!--  -->
+    </section>
+        
+   
+</main>
+<script>
+  function toggleEdit(itemId) {
+    var editToggle = document.getElementById("editToggle_" + itemId);
+    if (editToggle.style.display === "none") {
+      editToggle.style.display = "block";
+    } else {
+      editToggle.style.display = "none";
+    }
+  }
+  
+function checkImage(itemId) {
+  var image = document.getElementById("image_" + itemId);
+  const files = image.files;
+
+  if (files.length === 0) {
+    console.log("Image is not filled.");
+    
+    return false;
+  } else {
+    console.log("Image is filled.");
+    return true;
+  }
+}
+
+function validation(itemId) {
+ 
+  var isImageFilled = checkImage(itemId);
+  
+  if (!isImageFilled) {
+    var errorMessage = document.getElementById("error_message_" + itemId);
+    errorMessage.style.display = "block";
+
+    return false;
+  }
+  errorMessage.style.display = "none";
+  return true;
+}
+
+ 
+
+
+</script>

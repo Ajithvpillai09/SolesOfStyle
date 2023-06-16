@@ -1,0 +1,354 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+<style>
+    table {
+        border-collapse: collapse;
+        border: none;
+    }
+    
+    th,
+    td {
+        border: none;
+    }
+    .hover-div {
+        border-top: 1px solid #f8f8f8;
+        background: #f8f8f8;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        margin: 10px 0px;
+    }
+    .hover-div {
+        border-top: 1px solid #f8f8f8;
+        background: #f8f8f8;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        padding: 10px;
+    }
+    
+    .hover-div:hover {
+        -webkit-transform: translateY(-20px);
+        -ms-transform: translateY(-20px);
+        transform: translateY(-20px);
+        box-shadow: 0 22px 43px rgba(0, 0, 0, 0.32);
+        cursor: pointer;
+        border-radius: 5px;
+    }
+  .hover-container .content {
+  display: none;
+}
+
+.hover-container:hover .content {
+  display: block;
+}
+
+.title{
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+ </style>
+
+<div class="page-wrapper">
+    <div class="main ">
+        <div class="page-header text-center" >
+            <div class="container mt-5">
+                <h5 class="title">Checkout</h5>
+            </div><!-- End .container -->
+        </div>
+        <div class="container mt-50 ">
+            <div class="row"> 
+               
+                <div class="col-lg-6 col-md-12">
+                    <div class="container mt-5">
+                        <h5 class="title">Billing Address</h5>
+                    </div>
+                    <div class="col-lg-12 ">
+                      
+                            <div class="card m-3 mb-lg-0 border-0">
+
+                        <div class="product-body hover-div">
+                            <div class="row">
+                                <div class="col-9">
+                                    <p><%=deliveryAddress.radio%></p>
+                                    <p style="font-weight:bold;"><%= `${deliveryAddress.firstname} ${deliveryAddress.lastname}` %></p> 
+                                </div>
+                            </div>
+                             <div class="row"> 
+                                    <div class="col-9">
+                                           <p><%= deliveryAddress.mobile%>| <%=deliveryAddress.email%></p>  
+                                           <p><%= deliveryAddress.streetaddress %></p> 
+                                           <p><%= deliveryAddress.appartment %></p> 
+                                           <p><%= deliveryAddress.state %>,<%= deliveryAddress.town %></p>
+                                           <p> <%= deliveryAddress.zip %></p>
+                                    </div>
+                                   
+                                  
+                                 </div>
+                        </div>
+                            </div>
+                      <!-- End .product-body -->
+                     </div>
+                </div>
+                 <div class="col-lg-4 col-md-12 ml-5">
+                   <div class="border p-md-4 p-30 border-radius cart-totals">
+                     <div class="heading_s1 mb-3">
+                        <h4>Cart Totals</h4>
+                     </div>
+                    <div class="table-responsive">
+                        <div class="col">
+                            <div class="order_review">
+                                <div class="table-responsive order_table text-center">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">Product</th>
+    
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           <%cartItems.forEach((item) => { %>
+                                                
+                                            
+                                            <tr>
+                                                <!-- <td class="image product-thumbnail"><img src="/uploads/<%= item.productInfo.images[0] %>" alt="#"></td> -->
+                                                <td>
+                                                    <h5><a href="shop-product-full.html"><%= item.productInfo.productname %> <span style="color: rgb(12, 12, 10); margin: 2px;">x</span><%= item.quantity %></a></h5> 
+                                                </td>
+                                               
+                                            </tr>
+                                            <% });%>
+                                           
+                                        </tbody>
+                                    </table>
+                                </div>
+                              
+                               
+                            </div>
+                        </div>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="cart_total_label">Your Order</td>
+                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand" id="totalPrice">₹<%=cartTotal.total%></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Shipping</td>
+                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                </tr>
+                                <tr>
+                                    <td class="cart_total_label">Tax</td>
+                                    <td class="cart_total_amount" id="adTax">₹<%=cartTotal.totalTax%></td>
+                                </tr>
+                                <%if(cartTotal.discount > 0){%>
+                                <tr>
+                                    <td class="cart_total_label">Discount</td>
+                                    <td class="cart_total_amount" id="discount">₹<%=cartTotal.discount%></td>
+                                </tr>
+                                <%}%>
+                                <tr>
+                                    <td class="cart_total_label">Total</td>
+                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" id="taxWithTotal">₹<%=cartTotal.totalWithTax-cartTotal.discount%></span></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                        <form action="" id="form">
+                            <input type="text" class="form-control" name="addressId" value="<%=deliveryAddress._id%>" hidden>
+                            <div class="payment_method">
+                                <div class="mb-25">
+                                    <h5>Choose Payment Option</h5>
+                                </div>
+                                <div class="payment_option">
+                                <div class="form-group">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios3" value="COD" >
+                                        <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Cash on Delivery</label>
+                                        <div class="form-group collapse in" id="bankTranfer">
+                                            <p class="text-muted mt-5">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-group">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" value="Paypal" >
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">Paypal</label>
+                                        <div class="form-group collapse in" id="checkPayment">
+                                            <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input"  type="radio" name="payment_option" id="exampleRadios5" value="Razorpay" > 
+                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Razorpay</label>
+                                        <div class="form-group collapse in" id="paypal">
+                                            <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="form-group">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" type="radio" name="payment_option" id="exampleRadios4" value="Wallet" >
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">Wallet payment :<span> you have
+                                            <%if(wallet){%>
+                                                <span class="badge rounded-pill alert-success text-success" style="font-size: 15px;">₹<%=wallet.walletAmount%></span>
+                                                <%}else{%>
+                                                    <span class="badge rounded-pill alert-danger text-danger" style="font-size: 15px;">₹ 0</span> <%}%>
+                                                    in your wallet</span> 
+                                                </label>
+                                        <div class="form-group collapse in" id="checkPayment">
+                                            <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <button id="place-order-button" type="submit" class="btn btn-primary">Place Order</button>
+                        </form>
+                    </div>
+                    <!-- <a href="#" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To Payment</a> -->
+                    
+                </div>
+                
+            </div>
+            
+            </div>
+           
+        </div>
+        
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    const placeOrderButton = document.getElementById("place-order-button");
+    placeOrderButton.addEventListener('click', function(event) {
+    const paymentMethods = document.getElementsByName("payment_option");
+    const discount = document.getElementById('discount').innerHTML
+    let paymentSelected = false;
+    
+    for (let i = 0; i < paymentMethods.length; i++) {
+        if (paymentMethods[i].checked) {
+            paymentSelected = true;
+            break;
+        }
+    }
+    
+    if (!paymentSelected) {
+        event.preventDefault();
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: 'Please select a payment option',
+            showConfirmButton: false,
+            timer: 1500
+            })
+    }
+});
+
+
+    $('#form').submit((e)=>{
+        console.log("submitting to place order");
+        e.preventDefault()
+        $.ajax({
+            url:'/place-order',
+            type:'POST',
+            data:$("form").serialize(),
+            success:(response)=>{
+                console.log(response);
+                if(response.wallet == false){
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: response.message,
+                    showConfirmButton: true,
+                })
+
+               }else if(response.COD ){   
+                    location.href = '/success-page'           
+                }else{
+                    razorpayPayment(response)
+
+                }
+
+               
+            }
+
+        })
+    })
+
+    function  razorpayPayment(order){
+        var options = {
+
+                "key": "rzp_test_boeHmbbU7kIXo1", // Enter the Key ID generated from the Dashboard
+                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "Soles Of Styles",
+                "description": "Test Transaction",
+                "image": "https://example.com/your_logo",
+                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+                //  alert(response.razorpay_payment_id);
+                //  alert(response.razorpay_order_id);
+                //  alert(response.razorpay_signature)
+                verifyPayment(response, order)
+                },
+                "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"
+                },
+                "notes": {
+                "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                "color": "#243247"
+                }
+                };
+                var rzp1 = new Razorpay(options);
+                rzp1.on('payment.failed', function (response) {
+                //  alert(response.error.code);
+                //  alert(response.error.description);
+                //  alert(response.error.source);
+                //  alert(response.error.step);
+                //  alert(response.error.reason);
+                //  alert(response.error.metadata.order_id);
+                //  alert(response.error.metadata.payment_id);
+                verifyPayment(response, order)
+                });
+
+                rzp1.open();
+
+         }
+
+         function verifyPayment(payment,order){
+            $.ajax({
+                url:'/verify-payment',
+                data:{
+                    payment,
+                    order
+                },
+                type:'POST',
+                success:(response =>{
+                    if(response.status){
+                        location.href = '/success-page'
+                    }else{
+                        location.href = '/payment-failed'
+                    }
+
+                })
+            })
+
+         }
+    
+
+</script>
+
+

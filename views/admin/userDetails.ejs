@@ -1,0 +1,149 @@
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+<link href="/datatables.min.css" rel="stylesheet"/>
+
+<style>
+  .btn-width {
+  width: 50;
+}
+
+@media (max-width: 768px) {
+  .btn-width {
+    width: auto;
+    display: block;
+    margin-bottom: 10px; 
+  }
+}
+.alert-top {
+position: fixed;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+z-index: 1000;
+max-width: 300px;
+}
+.btn.btn-secondary, .btn.btn-primary, .btn.btn-success {
+  padding: 5px 10px;
+}
+
+</style>
+  
+
+<main class="main-wrap">
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">User Details</h2>
+                
+            </div>
+        </div>
+           
+              <section>
+                <% if(users != ''){ %>
+                    <table class="table table-hover table-striped table-light mt-5 display" id="myTable">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Options</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <%users.forEach((item,index)=>{%>
+                            <tr>
+                                <td>
+                                  <%= index+1 %>
+                                </td>
+                                <td>
+                                  <%= item.name %>
+                                </td>
+                                <td>
+                                  <%= item.email %>
+                                </td>
+                                <td>
+                                  <%= item.phone %>
+                                </td>
+                                <td>
+                                  <% if (item.isBlocked) { %>
+                                    <a class="btn btn-success btn-width " href="#" onclick="confirmUnblock('<%=item.name%>','<%=item._id%>')" >Unblock</a>
+                                  <% } else { %>
+                                    <a class="btn btn-danger btn-width " href="#" onclick="confirmBlock('<%=item.name%>','<%=item._id%>')">Block</a>
+                                  <% } %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                       
+                        
+                    </table>
+                    <% } else { %>
+                      <h1 class="text-center text-secondary mt-5">No Users Registered</h1>
+                  <% } %>
+              </section>
+                
+            </div>
+            <!-- card-body end// -->
+       
+    </section> <!-- content-main end// -->
+    
+</main>
+<script>
+  $(document).ready(function() {
+   
+   var scriptPromise = $.getScript("/datatables.min.js");
+  
+
+
+scriptPromise.done(function() {
+  $('#myTable').DataTable();
+});
+
+scriptPromise.fail(function() {
+  console.error("Failed to load DataTables script.");
+});
+});
+
+  
+ function cancelDelete() {
+  $('.alert').alert('close');
+}
+
+
+
+
+function confirmUnblock(userName, userId) {
+  // create custom alert
+  let confirmUnblock = `
+    <div class="alert alert-secondary alert-dismissible fade show alert-top" role="alert">
+      Are you sure you want to unblock <strong>${userName}</strong>?
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <form action="/admin/unblock/${userId}" method="GET" style="display: inline-block; margin-top: 10px;">
+        <button type="submit" class="btn btn-success btn-sm" >Unblock</button>
+        <button type="button" class="btn btn-secondary btn-sm " onclick="cancelDelete()">Cancel</button>
+        </form>
+    </div>
+  `;
+
+  // append the alert to the body
+  $('body').append(confirmUnblock);
+} 
+function confirmBlock(userName, userId) {
+  // create custom alert
+  let confirmBlock = `
+    <div class="alert alert-secondary alert-dismissible fade show alert-top" role="alert">
+      Are you sure you want to block <strong>${userName}</strong>?
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <form action="/admin/block/${userId}" method="GET" style="display: inline-block; margin-top: 10px;">
+        <button type="submit" class="btn btn-danger btn-sm" >Block</button>
+        <button type="button" class="btn btn-secondary btn-sm " onclick="cancelDelete()">Cancel</button>
+        </form>
+    </div>
+  `;
+
+  // append the alert to the body
+  $('body').append(confirmBlock);
+} 
+</script>

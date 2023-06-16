@@ -1,0 +1,324 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+
+
+<style>
+    .btn-danger{
+       background-color: red;
+       border:none;
+    }
+    .modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+</style>
+
+<section class="mt-50 mb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table shopping-summery text-center clean">
+                        <thead>
+                            <tr class="main-heading">
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Subtotal</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%products.forEach(item=>{%>
+
+                           
+                            <tr>
+                                <td class="image product-thumbnail"><img src="/uploads/<%= item.images[0] %>" alt="#"></td>
+                                <td class="product-des product-name">
+                                    <h5 class="font-xs pt-2"><%= item.productname %>
+                                    </h5>
+                                </td>
+                                <td class="price" data-title="Price"><span>₹<%= item.currentPrice%></span></td>
+                               
+                                <td class="text-center" data-title="Quantity"><%= item.quantity%></td>
+                                
+                                <td class="text-right" data-title="Subtotal">
+                                    <span>₹<%= item.quantity* item.currentPrice%></span>
+                                </td>
+
+                                <td class="text-center" data-title="status"><%= item.orderStatus%>
+                                    <%if(item.orderStatus == "Delivered"){%>
+                                     <br> on: <%= new Date(item.deliveredDate).toLocaleString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                      }) %>
+                                      <br>
+                                      can return within 7 days
+                                     <%}%>
+
+                                 </td>
+                                <%if(item.orderStatus !== "Delivered"){%>
+                                <td class="action-col">
+                                    <%if(item.orderStatus === "Cancelled" || item.orderStatus === "Returned" ||item.orderStatus === "Return requested"){%>
+                                        <p class="text-danger"><%=item.orderStatus%></p>
+
+                                        <%}else{%>
+                                            <button class="btn btn-danger " 
+                                            onclick="cancelOrder('<%=orders._id%>','<%=item._id%>','<%=item.quantity%>','<%=orders.paymentStatus%>','<%=(item.currentPrice*item.quantity)+item.tax%>','<%=subTotal+tax %>','<%=orders.discount %>')">
+                                              Cancel Product
+                                            </button>
+                                            <%}%>
+                                    
+                                   
+                                    </td>
+                                <%}else{%>  
+                                    <td class="action-col">
+                                    
+                                        <button class="btn btn-danger"onclick="returnOrder('<%=orders._id%>','<%=item._id%>','<%=item.quantity%>','<%=item.deliveredDate%>')">Return</button>
+                                       
+                                        </td>
+                                <%}%>  
+                               
+                            </tr>
+                            <% })%>
+                        </tbody>
+                    </table>
+            
+                </div>
+                <div class="divider center_icon mt-5 mb-5"><i class="fi-rs-fingerprint"></i></div>
+                <div class="row mb-50">
+                  <div class="col-lg-6 col-md-12">
+                    <div class="mb-30 mt-50">
+                      <div class="heading_s1 mb-3">
+                          <h4>Delivered to</h4>
+                          Ordr Placed on: <%= new Date(orders.createdAt).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true
+                          }) %>
+                      </div>
+                      
+                      <div class="col-lg-12 ">
+                      
+                        <div class="card m-3 mb-lg-0 border-0">
+
+                    <div class="product-body hover-div">
+                        <div class="row">
+                            <div class="col-9">
+                                <p><%=deliveryAddress.radio%></p>
+                                <p style="font-weight:bold;"><%= `${deliveryAddress.firstname} ${deliveryAddress.lastname}` %></p> 
+                            </div>
+                        </div>
+                         <div class="row"> 
+                                <div class="col-9">
+                                       <p><%= deliveryAddress.mobile%>| <%=deliveryAddress.email%></p>  
+                                       <p><%= deliveryAddress.streetaddress %></p> 
+                                       <p><%= deliveryAddress.appartment %></p> 
+                                       <p><%= deliveryAddress.state %>,<%= deliveryAddress.town %></p>
+                                       <p> <%= deliveryAddress.zip %></p>
+                                </div>
+                                <!-- <div class="col-3 d-flex align-items-end justify-content-end">
+                                    <button type="submit"  class="btn btn primary" onclick="">Select</i></button>
+                                </div> -->
+                              
+                             </div>
+                    </div>
+                        </div>
+                  <!-- End .product-body -->
+                 </div>
+                  </div>
+                </div>
+                    <div class="col-lg-6 col-md-12">
+                        <div class="border p-md-4 p-30 border-radius cart-totals">
+                            <div class="heading_s1 mb-3">
+                                <h4>Order Payment Details</h4>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="cart_total_label"> Subtotal</td>
+                                            <td class="cart_total_amount"><span class="font-lg fw-900 text-brand" id="totalPrice">₹<%=subTotal %></span></td>
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td class="cart_total_label">Tax</td>
+                                            <td class="cart_total_amount" id="adTax">₹<%=tax %></td>
+                                        </tr>
+                                      <%if(orders.discount != 0){%>
+                                        <tr>
+                                            <td class="cart_total_label">Coupon discount</td>
+                                            <td class="cart_total_amount" id="adTax">₹<%=orders.discount %></td>
+                                        </tr>
+                                        <%}%>
+                                      
+
+                                        <tr>
+                                            <td class="cart_total_label">Total</td>
+                                            <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" id="taxWithTotal">₹<%=orders. totalAmount%></span></strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="cart_total_label">Payment Mode</td>
+                                            <td class="cart_total_amount"> <i class="ti-gift mr-5"></i><%=orders.paymentMethod%></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+<script>
+    function cancelOrder(orderId,productId,quantity,paymentSatus,productPrice,grandTotal,discount){
+
+        let refundAmount = productPrice/grandTotal*[grandTotal-discount]
+        console.log(refundAmount);
+
+
+        Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#4CAF50',
+                confirmButtonText: 'Yes, cancel it!'
+              }).then((result)=>{
+                if(result.isConfirmed){
+                    $.ajax({
+                        url:'/cancel-order',
+                        type:'PATCH',
+                        data:{
+                           orderId:orderId,
+                           productId:productId,
+                            quantity:quantity,
+                            paymentSatus:paymentSatus,
+                            refundAmount:refundAmount
+                        },
+                        success:((response)=>{
+                            if(response.status){
+                                Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Order cancelled successfully',
+                                showConfirmButton: false,
+                                timer: 1500
+                                }).then(()=>{
+                                    location.reload()
+                                })
+                            }
+                        })
+                })
+            } 
+
+              })
+    }
+ 
+    function returnOrder(orderId,productId,quantity,deliveredDate){  
+       let delivered = new Date(deliveredDate)
+       let today = new Date();
+       let timeDiff = today.getTime() - delivered.getTime();
+       let daysDiff  = Math.floor(timeDiff / (1000 * 3600 * 24));
+    
+       if(daysDiff > 7){
+        Swal.fire({
+            title: 'Return Window Closed',
+            icon: 'warning',
+            confirmButtonColor: '#3085d6', 
+            })
+       }else{
+        Swal.fire({
+            title: 'Are you sure?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, proceed!'
+            }).then(async(result) => {
+            if (result.isConfirmed) {
+                const { value: text } = await Swal.fire({
+                        input: 'textarea',
+                        inputLabel: 'Reason to return',
+                        inputPlaceholder: 'Type your reason here...',
+                        inputAttributes: {
+                            'aria-label': 'Type your reason here'
+                        },
+                        showCancelButton: true
+                        })
+
+                        if (text) {
+                            $.ajax({
+                                url:'/return-order',
+                                type:'PATCH',
+                                data:{
+                                    orderId,
+                                    productId,
+                                    quantity,
+                                    text
+                                },
+                                success:(response=>{
+                                Swal.fire({
+                                    position: 'center',
+                                    icon: 'success',
+                                    title: 'Return request submitted successfully',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                    }).then(()=>{
+                                        location.reload();
+                                    })
+
+                                })
+
+                            })
+                }
+            }
+        })
+
+       }
+}
+</script>

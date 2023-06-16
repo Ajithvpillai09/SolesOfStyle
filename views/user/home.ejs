@@ -1,0 +1,201 @@
+<style>
+    video{
+ 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.bannerContent{
+    text-align: center;
+    margin:48px;
+}
+.heading{
+    margin:4px; 
+    padding:4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5;
+}
+.discreption {
+    font-size: 48px;
+    line-height: 60px;
+    font-weight: 700;
+}
+
+@media screen and (max-width: 768px) {
+    .discreption {
+        font-size: 36px;
+        line-height: 48px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .discreption {
+        font-size: 24px;
+        line-height: 36px;
+    }
+}
+
+.shop {
+ width: 6.5em;
+ height: 2.3em;
+ margin: 0.5em;
+ background: black;
+ color: white;
+ border: none;
+ border-radius: 0.625em;
+ font-size: 20px;
+ font-weight: bold;
+ cursor: pointer;
+ position: relative;
+ z-index: 1;
+ overflow: hidden;
+}
+
+.shop:hover {
+ color: black;
+}
+
+.shop:after {
+ content: "";
+ background: #088178;;
+ position: absolute;
+ z-index: -1;
+ left: -20%;
+ right: -20%;
+ top: 0;
+ bottom: 0;
+ transform: skewX(-45deg) scale(0, 1);
+ transition: all 0.5s;
+}
+
+.shop:hover:after {
+ transform: skewX(-45deg) scale(1, 1);
+ -webkit-transition: all 0.5s;
+ transition: all 0.5s;
+}
+.categoryWrapper{
+    margin: 25px;
+}
+.imageWrapper{
+    position: relative;
+}
+.category{
+    position:absolute;
+    bottom: 0;
+    right:0;
+    margin:12px
+}
+.category {
+  background: #fff;
+  border: none;
+  padding: 10px 20px;
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 600;
+  width: 120px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transform: skew(-21deg);
+}
+
+
+.category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  left: 0;
+  background: rgb(20, 20, 20);
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.5s;
+}
+
+.category:hover {
+  color: #fff;
+}
+
+.category:hover::before {
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+
+
+
+</style>
+     <main class="main">
+        <section>
+            <video autoplay loop muted plays-inline class="home-video">
+                <source src="/uploads/Shoes by 2GO - Theatrical Ad Film _ Commercial.webm" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+        </section>  
+        <section>
+              <div class="bannerContent">
+                <h1 class="heading"><%=bannerData.title%></h1>
+                <h2 class="discreption"><%=bannerData.description%></h2>
+                <a href="/shop"><button class="shop"> Shop
+                </button></a>
+              </div>
+        </section>
+        <section class="banner-2 section-padding pb-0">
+            <div class="container">
+                <div class="banner-img banner-big wow fadeIn animated f-none">
+                    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <img class="d-block w-100" src="/uploads/<%= bannerData.images[0] %>" alt="First slide">
+                          </div>
+                          <div class="carousel-item">
+                            <img class="d-block w-100" src="/uploads/<%= bannerData.images[1] %>" alt="Second slide">
+                          </div>
+                          <div class="carousel-item">
+                            <img class="d-block w-100" src="/uploads/<%= bannerData.images[2] %>" alt="Third slide">
+                          </div>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="card-group categoryWrapper">
+                <div class="card imageWrapper">
+                  <img class="card-img-top" src="/uploads/<%=catImage[0].image %>" alt="Card image cap">  
+                  <a href="/kids"><button class="category"><%=catImage[0].category %></button></a>              
+                </div>
+                <div class="card">
+                  <img class="card-img-top" src="/uploads/<%=catImage[1].image %>" alt="Card image cap">
+                  <a href="/mens"><button class="category" ><%=catImage[1].category %></button></a>    
+                </div>
+                <div class="card">
+                  <img class="card-img-top" src="/uploads/<%=catImage[2].image %>" alt="Card image cap">
+                  <a href="/womens"><button class="category"><%=catImage[2].category %></button></a>   
+                </div>
+            </div>
+        </section>
+        
+             
+         
+     </main>
+     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var carousel = document.querySelector("#carouselExampleSlidesOnly");
+            var carouselInterval = 3000; // Time in milliseconds between slide transitions
+    
+            setInterval(function() {
+                var activeSlide = carousel.querySelector(".carousel-item.active");
+                var nextSlide = activeSlide.nextElementSibling || carousel.querySelector(".carousel-item:first-child");
+    
+                activeSlide.classList.remove("active");
+                nextSlide.classList.add("active");
+            }, carouselInterval);
+        });
+    </script>
+    
+    

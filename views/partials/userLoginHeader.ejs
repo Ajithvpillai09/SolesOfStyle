@@ -1,0 +1,343 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+<style>
+     #searchView{
+            margin-top: 20px;
+            position: absolute;
+            max-width: 600px;
+            z-index: 5;
+            background-color: transparent;
+            width: 500px;
+            font-style: italic;
+        }
+        /* From uiverse.io by @satyamchaudharydev */
+/* this button is inspired by -- whatsapp input */
+/* == type to see fully interactive and click the close buttom to remove the text  == */
+
+.form {
+  --input-bg: #FFf;
+ /*  background of input */
+  --padding: 1.5em;
+  --rotate: 80deg;
+ /*  rotation degree of input*/
+  --gap: 2em;
+  /*  gap of items in input */
+  --icon-change-color: #15A986;
+ /*  when rotating changed icon color */
+  --height: 40px;
+ /*  height */
+  width: 200px;
+  padding-inline-end: 1em;
+ /*  change this for padding in the end of input */
+  background: var(--input-bg);
+  position: relative;
+  border-radius: 4px;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--height);
+}
+
+.form input {
+  width: 100%;
+  padding-inline-start: calc(var(--padding) + var(--gap));
+  outline: none;
+  background: none;
+  border: 0;
+}
+/* style for both icons -- search,close */
+.form svg {
+  /* display: block; */
+  color: #111;
+  transition: 0.3s cubic-bezier(.4,0,.2,1);
+  position: absolute;
+  height: 15px;
+}
+/* search icon */
+.icon {
+  position: absolute;
+  left: var(--padding);
+  transition: 0.3s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* arrow-icon*/
+.swap-off {
+  transform: rotate(-80deg);
+  opacity: 0;
+  visibility: hidden;
+}
+/* close button */
+.close-btn {
+  /* removing default bg of button */
+  background: none;
+  border: none;
+  right: calc(var(--padding) - var(--gap));
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  padding: 0.1em;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: 0.3s;
+  opacity: 0;
+  transform: scale(0);
+  visibility: hidden;
+}
+
+.form input:focus ~ .icon {
+  transform: rotate(var(--rotate)) scale(1.3);
+}
+
+.form input:focus ~ .icon .swap-off {
+  opacity: 1;
+  transform: rotate(-80deg);
+  visibility: visible;
+  color: var(--icon-change-color);
+}
+
+.form input:focus ~ .icon .swap-on {
+  opacity: 0;
+  visibility: visible;
+}
+
+.form input:valid ~ .icon {
+  transform: scale(1.3) rotate(var(--rotate))
+}
+
+.form input:valid ~ .icon .swap-off {
+  opacity: 1;
+  visibility: visible;
+  color: var(--icon-change-color);
+}
+
+.form input:valid ~ .icon .swap-on {
+  opacity: 0;
+  visibility: visible;
+}
+
+.form input:valid ~ .close-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: 0s;
+}
+
+   /* Styles for the cart icon */
+   .cart-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #f8f8f8;
+            border-radius: 50%;
+        }
+
+        .cart-icon i {
+            color:#1a1a1a;
+            line-height: 1;
+        }
+
+        /* Styles for the cart count */
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 16px;
+            height: 16px;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            border-radius: 50%;
+        }
+</style>
+<body>
+    <!-- desktop menu -->
+    <header class="header-area header-style-1 header-height-2">
+       
+         <div class="header-top header-top-ptb-1 d-none d-lg-block">
+            <div class="container">
+                 <div class="row align-items-center">
+                         <div class="header-info header-info-right">
+                             <ul >
+                                 <li><%-user.name%></li>
+                                 <li><i class="fi-rs-user"></i><a href="/logout">logout</a></li>
+                             </ul>
+                         </div>
+                 </div>
+             </div>
+         </div>
+          <div class="header-bottom header-bottom-bg-color sticky-bar">
+             <div class="container">
+                 <div class="header-wrap header-space-between position-relative"> 
+                     <div class="my-logo">
+                         <a href="/home"><h5>Soles Of Style</h5></a>
+                     </div> 
+                     
+                     <div class="header-nav d-none d-lg-flex">
+                        <!--  -->
+                        <form class="form ">
+                            <label for="search">
+                                <input required="" autocomplete="off" placeholder="search here..." id="search" type="text" name="q" onkeyup="sendData(this)">
+                                <div class="icon">
+                                    <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-on">
+                                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linejoin="round" stroke-linecap="round"></path>
+                                    </svg>
+                                    <svg stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="swap-off">
+                                        <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linejoin="round" stroke-linecap="round"></path>
+                                    </svg>
+                                </div>
+                                <button type="reset" class="close-btn">
+                                    <svg viewBox="0 0 20 20" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
+                                        <path clip-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+                                    </svg>
+                                </button>
+                            </label>
+                            <div class="text-center">
+                                <div class="row" id="searchView"></div>
+                           </div>
+                        </form>
+                         <!--  -->
+                         
+                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
+                             <nav>
+                                 <ul>
+                                     <li>
+                                         <a href="/">HOME</a>
+                                     </li>
+                                     <li>
+                                         <a href="/mens">MEN</a>
+                                     </li>
+                                     <li >
+                                         <a href="/womens">WOMEN</a>
+                                     </li>
+                                     <li>
+                                         <a href="/kids">KIDS</a>
+                                     </li>
+                                     <li>
+                                        <a href="/shop">SHOP</a>
+                                    </li>
+                                     <li>
+                                         <a href="/my-account">MY ACCOUNT</a>
+                                         
+                                     </li>
+                                     <li>
+                                       
+                                        <div class="cart-icon">
+                                            <a href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                                            <%if(cartCount){%>
+                                            <div class="cart-count" id="cartCount"><%=cartCount%></div>
+                                            <%}%>         
+                                        </div>
+                                     </li>
+                                 </ul>
+                                 
+                             </nav>
+                         </div>
+                     </div> 
+                      <div class="header-action-right d-block d-lg-none">
+                         <div class="header-action-2">
+                                 <div class="cart-dropdown-wrap cart-dropdown-hm2"> 
+                                     <div class="shopping-cart-footer">
+                                         <div class="shopping-cart-total">
+                                             <h4>Total <span>$383.00</span></h4>
+                                         </div>
+                                         <div class="shopping-cart-button">
+                                             <a href="shop-cart.html">View cart</a>
+                                             <a href="shop-checkout.html">Checkout</a>
+                                         </div>
+                                     </div>
+                                  </div>
+                             </div>
+                             <div class="header-action-icon-2 d-block d-lg-none">
+                                 <div class="burger-icon burger-icon-white">
+                                     <span class="burger-icon-top"></span>
+                                     <span class="burger-icon-mid"></span>
+                                     <span class="burger-icon-bottom"></span>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div> 
+             </div>
+         </div> 
+        
+     </header>
+     <div class="mobile-header-active mobile-header-wrapper-style">
+         <div class="mobile-header-wrapper-inner">
+             <div class="mobile-header-top">
+                 <div class="my-logo">
+                     <h5>Soles Of Style</h5>
+                 </div>
+                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                     <button class="close-style search-close">
+                         <i class="icon-top"></i>
+                         <i class="icon-bottom"></i>
+                     </button>
+                 </div>
+             </div>
+             <div class="mobile-header-content-area">
+                 <div class="mobile-menu-wrap mobile-header-border">
+                     <nav>
+                         <ul class="mobile-menu">
+                             <li>
+                                 <a href="/">HOME</a>
+                             </li>
+                             <li>
+                                 <a href="/mens">MEN</a>
+                             </li>
+                             <li >
+                                 <a href="/womens">WOMEN</a>
+                             </li>
+                             <li>
+                                 <a href="/kids">KIDS</a>
+                             </li>
+                             <li>
+                                <a href="/shop">SHOP</a>
+                            </li>
+                             <li>
+                                 <a href="/my-account">MY ACCOUNT</a>
+                                 
+                             </li>
+                             <li>
+                                 <a href="/cart">CART</a>
+                                 
+                             </li>
+                         </ul>
+                     </nav>
+                     <!-- mobile menu end -->
+                 </div>
+                 <div class="mobile-header-info-wrap mobile-header-border">
+                    <div class="single-mobile-header-info">
+                        <span id="cartCount"><%-user.name %></span>
+                    </div>
+                     <div class="single-mobile-header-info">
+                         <a href="/logout">Logout</a>
+                     </div>
+                 </div>
+                 <div class="mobile-social-icon">
+                     <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                     <a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                     <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                     <a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                     <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                     <a href="#"><img src="assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                 </div>
+             </div>
+         </div>
+     </div>
+    
+   

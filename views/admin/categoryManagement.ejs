@@ -1,0 +1,155 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+
+<style>
+   .list{
+    background-color: #088178;
+    padding: 5px 10x;
+    color: #ffffff;
+    border: none;
+    }
+    .unlist{
+    background-color: #bc1c41;
+    padding: 5px 10x;
+    color: #ffffff;
+    border: none;
+    }
+</style>
+
+<main class="main-wrap">
+    <section class="content-main">
+          <div class="container mt-5 bg-light">
+             <div class="row justify-content-center">
+               <div class="col-md-6">
+                 <div class="card">
+                   <div class="card-header  text-white">
+                   
+                     <h3 class="mb-0">Add Category</h3>
+                   </div>
+                   <div class="card-body">
+                    <% if(errMessage != ""){ %>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="padding: 10px;">
+                          <%=  errMessage %>
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 1rem;">
+                          </button>
+                        </div>
+                     <% } %>
+                     <form id="categoryForm" class="needs-validation" action="/admin/add-category" method="post" novalidate>
+                       <div class="form-group mt-3">
+                         <label for="categoryName">Category Name</label>
+                         <input type="text" class="form-control" id="categoryName" placeholder="Enter category name" name="category" required>
+                         <div class="invalid-feedback">
+                           Please enter a category name.
+                         </div>
+                       </div>
+                       <br>
+                       <button id="submitbtn" value="Submit" type="submit" class="btn btn-primary">Submit</button>
+                       
+                     </form>
+                   </div>
+                 </div>
+               </div>
+               <!--  -->
+               <% if(category.length > 0){%>
+               <div class="col-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <h4>Added Categories:</h4>
+                    <table class="display" id="myTable">
+                      <thead class="text-center">
+                        <tr>
+                          <th scope="col" style="padding: 10px;">No</th> <!-- Add index position column -->
+                          <th scope="col" style="padding: 10px;">Category</th>
+                          <th scope="col" style="padding: 10px;">Options</th>
+                         
+                        </tr>
+                      </thead>
+                     
+                      <tbody class="text-center">
+                        <% category.forEach((element, index) => { %> <!-- Add index position in the forEach loop -->
+                        <tr>
+                          <td style="padding: 10px;" ><%= index + 1 %></td> <!-- Display index position -->
+                          <td style="padding: 10px;"><%= element.category %></td>
+                          <%if(element.isDeleted){%>
+                            <td style="padding: 10px;"><button class="list" onclick="catListUnlist('<%=element._id%>','false')">Undu</button></td>
+                            <%}else{%>
+                              <td style="padding: 10px;"><button class="unlist" onclick="catListUnlist('<%=element._id%>','true')">Delete</button></td>
+                              <%}%>
+                         
+                        </tr>
+                        <% }) %>
+                      </tbody>
+                      
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <%}%>
+               <!--  -->
+             </div>
+           </div>
+        
+         
+        </section> <!-- content-main end// -->
+   
+    </main>
+  
+           <!-- Bootstrap JS -->
+           <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+         
+           <script>
+             // JavaScript for form validation
+             (function() {
+               'use strict';
+               window.addEventListener('load', function() {
+                 var forms = document.getElementsByClassName('needs-validation');
+                 var validation = Array.prototype.filter.call(forms, function(form) {
+                   form.addEventListener('submit', function(event) {
+                     if (form.checkValidity() === false) {
+                       event.preventDefault();
+                       event.stopPropagation();
+                     }
+                     form.classList.add('was-validated');
+                   }, false);
+                 });
+               }, false);
+             })();
+
+             function catListUnlist(id,status){
+                  Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#4CAF50',
+                    confirmButtonText: 'Yes, proceed!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      $.ajax({
+                        url:'/admin/change-category',
+                        type:'PATCH',
+                        data:{id:id,status:status},
+                        success:(response=>{
+                          if(response.status){
+                            Swal.fire({
+                              position: 'center',
+                              icon: 'success',
+                              title: 'Changed Successfully',
+                              showConfirmButton: false,
+                              timer: 1500
+                          }).then(()=>{
+                            location.reload()
+                          })
+                        }
+                        })
+                      })
+                    }
+                  })
+               }
+           </script>
+        
+       
+   

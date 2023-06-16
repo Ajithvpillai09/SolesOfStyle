@@ -1,0 +1,272 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>
+<main class="main-wrap">
+    <section class="content-main">
+  
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Order details</h2>
+            <p>Details for Order ID:<%=order._id%> </p>
+        </div>
+    </div>
+    <div class="card">
+        <header class="card-header">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                    <span>
+                        <i class="material-icons md-calendar_today"></i> <%= new Date(order.createdAt).toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true
+                          }) %><b></b>
+                    </span> <br>
+                    <small class="text-muted">Order ID:<%=order._id%></small>
+                </div>
+                <!-- <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                  
+                    <select class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
+                        <option><%=order.deliverystatus%></option>
+                        <option>Shipped</option>
+                        <option>Delivered</option>
+                        <option>Returned</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="changeFullStatus('<%=order._id%>')">Change</button>
+                  
+                     <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
+                </div> -->
+            </div>
+        </header> <!-- card-header end// -->
+        <div class="card-body">
+            <div class="row mb-50 mt-20 order-info-wrap">
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-person"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Customer</h6>
+                            <p class="mb-1">
+                                <%=userInfo.name%> <br><%=userInfo.email%> <br><%=userInfo.phone%>
+                            </p>
+                            <!-- <a href="#">View profile</a> -->
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-local_shipping"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Order info</h6>
+                            <p class="mb-1">
+                                Shipping: Fargo express <br> Pay method:<%=order.paymentMethod%> <br >Payment Status: <%=order.paymentStatus%>
+                            </p>
+                            <!-- <p class="mb-1"> Order Status:<%=order.deliveryStatus%></p> -->
+                           
+                              
+                           
+                            
+                            <!-- <a href="#">Download info</a> -->
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+                <div class="col-md-4">
+                    <article class="icontext align-items-start">
+                        <span class="icon icon-sm rounded-circle bg-primary-light">
+                            <i class="text-primary material-icons md-place"></i>
+                        </span>
+                        <div class="text">
+                            <h6 class="mb-1">Deliver to</h6>
+                            <p class="mb-1">
+                                <%= new Date(order.createdAt).toLocaleString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true
+                                  }) %>
+                                <%=deliveryDetails.firstname%><%=deliveryDetails.lastname%><br>
+                                <%=deliveryDetails.mobile%><br>
+                                <%=deliveryDetails.email%><br>
+                                <%=deliveryDetails.streetaddress%><br>
+                                <%=deliveryDetails.appartment%><br>
+                                <%=deliveryDetails.town%>,<%=deliveryDetails.state%><br>
+                                <%=deliveryDetails.zip%><br>                                
+                            </p>
+                            <!-- <a href="#">View profile</a> -->
+                        </div>
+                    </article>
+                </div> <!-- col// -->
+            </div> <!-- row // -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="text-center">
+                                <tr>
+                                    <th width="">Product</th>
+                                    <th width="">Unit Price</th>
+                                    <th width="">Quantity</th>
+                                    <th width="">Tax</th>
+                                    <th width="">Total</th>
+                                    <th width="">Payment Status</th>
+                                    <th width="">Order Status</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <%productInfo.forEach(item=>{%>                               
+                                <tr>
+                                    <td>
+                                        <a class="itemside" href="#">
+                                           
+                                            <div class="left">
+                                                <img src="/uploads/<%=item.images[0]%>" width="40" height="40" class="img-xs" alt="Item">
+                                            </div>
+                                            <div class="info"><%=item.productname%> </div>
+                                        </a>
+                                    </td>
+                                    <td>₹<%=item.currentPrice%></td>
+                                    <td><%=item.quantity%></td>
+                                    <td>₹<%=item.tax%></td>
+                                    <td>₹<%=(item.currentPrice*item.quantity)+item.tax%></td> 
+                                    <td ><%=order.paymentStatus%></td>
+                                    <!-- <td><select style="border:none" id="status" >
+                                        <option><%=order.paymentstatus%></option>
+                                        <option>pending</option>
+                                        <option>failed</option>
+                                        <option>completed</option>
+                                    </select>
+                                    <button class="btn btn-primary" onclick="changeStatus('<%=order._id%>','<%=item._id%>')">Change</button>
+                                </td> -->
+                                   <%if(item.orderStatus == "Cancelled" ||item.orderStatus == "Returned"){ %>
+                                        <td><%=item.orderStatus%></td>
+                                    <%}else{%>
+                                    <td><select style="border:none" id="status" >
+                                        <option><%=item.orderStatus%></option>
+                                        <option>Order placed</option>
+                                        <option>Returned</option>
+                                        <option>Shipped</option>
+                                        <option>Delivered</option>
+                                        <option>Cancelled</option>
+                                    </select>
+                                    <button class="btn btn-primary" onclick="changeStatus('<%=order._id%>','<%=item._id%>','<%=userInfo._id%>','<%=order.paymentStatus%>','<%=(item.currentPrice*item.quantity)+item.tax%>','<%=order.discount%>','<%=order.totalAmount%>','<%=item.quantity%>')">Change</button>
+                                </td>
+                                <%}%>
+                               
+
+                                </tr>                              
+                                <%})%>
+                                <tr>
+                                    <td colspan="4">
+                                        <article class="float-end">
+                                            <dl class="dlist">
+                                                <dt></dt>
+                                                <dd></dd>
+                                            </dl>
+                                            <%if(order.discount != 0){%>
+                                               
+                                            <dl class="dlist">
+                                                <dt>Coupon Discount</dt>
+                                                <dd>₹<%=order.discount%></dd>
+                                            </dl>
+                                            <%}%>
+
+                                            <dl class="dlist">
+                                                <dt>Grand total:</dt>
+                                                <dd> <b class="h5">₹<%=order.totalAmount%></b> </dd>
+                                            </dl>
+                                            <dl class="dlist">
+                                                <dt class="text-muted">Payment Status:</dt>
+                                                <dd>
+                                                    <%if(order.paymentStatus == "pending"){%>
+                                                        <span class="badge rounded-pill alert-warning text-warning"><%=order.paymentStatus%></span>
+                                                    <%}else{%>
+                                                        <span class="badge rounded-pill alert-success text-success"><%=order.paymentStatus%></span>
+                                                    <%}%>
+
+                                                        
+                                                </dd>
+                                            </dl>
+                                            <!-- <dl class="dlist">
+                                                <dt class="text-muted">Order Status:</dt>
+                                                <dd>
+                                                    <%if(order.deliverystatus == "Order placed"||order.deliverystatus == "Delivered"){%>
+                                                        <span class="badge rounded-pill alert-success text-succes"><%=order.deliverystatus%></span>
+                                                    <%}else if(order.deliverystatus == "Shipped"){%>
+                                                        <span class="badge rounded-pill alert-warning text-warning"><%=order.deliverystatus%></span>
+                                                    <%}else{%>
+                                                        <span class="badge rounded-pill alert-danger text-danger"><%=order.deliverystatus%></span>
+                                                    <%}%>                                                        
+                                                </dd>
+                                            </dl> -->
+                                        </article>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> <!-- table-responsive// -->
+                </div> <!-- col// -->
+                
+               
+            </div>
+        </div> <!-- card-body end// -->
+    </div> <!-- card end// -->
+</section>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
+<script>
+    function changeStatus(orderId,productId,userId,paymentStatus,productPrice,discount,totalPrice,quantity){
+        const status = document.getElementById('status').value
+        
+        console.log(orderId);
+        console.log(productId);
+        console.log(status);
+        console.log(paymentStatus);
+        console.log(productPrice);//11200
+        console.log(discount);//4435
+        console.log(totalPrice);//10348
+
+        let grandTotal = parseInt(totalPrice) + parseInt(discount);
+       let refundAmount = parseInt(productPrice)/parseInt(grandTotal)*parseInt(totalPrice)
+        refundAmount = Math.round(refundAmount)
+       console.log(refundAmount,"to refunddd");
+       
+
+        
+        $.ajax({
+            url:'/admin/change-status',
+            type:'PATCH',
+            data:{
+                orderId:orderId,
+                productId:productId,
+                userId:userId,
+                status:status,
+                paymentStatus:paymentStatus,
+                refundAmount:refundAmount,
+                quantity:quantity
+            },
+            success:((response)=>{
+                if(response.status){
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Order status changed successfully',
+                    showConfirmButton: false,
+                    timer: 1500 
+
+                    }).then(()=>{
+                        location.reload();
+                    })
+                }
+            })
+        })
+    }
+</script>

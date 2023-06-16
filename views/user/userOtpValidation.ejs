@@ -1,0 +1,89 @@
+<style>
+    .card-login {
+   max-width: 350px;
+}
+.card-login:hover{
+    box-shadow: 0 15px 25px rgba(53, 53, 53, 0.6);
+}
+.card-title{
+  text-align: center;
+  font-size: 45px;
+  font-weight: 600;
+  background-image: linear-gradient(to left, #88d5cd, #0f6152);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+</style>
+<body>
+   <main>
+       <section class="content-main mt-80 mb-80">
+        <h4 class="card-title mb-4">Soles Of Style</h4>
+           <div class="card mx-auto card-login">
+                   <div class="card-body ">
+                    <% if(errMessage != ""){ %>
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="padding: 10px;">
+                          <%=  errMessage %>
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 1rem;">
+                          </button>
+                        </div>
+                     <% } %>
+                <form class="mt-5" action="/validate-otp" method="post" onsubmit="return validation()">
+                    <div class="form-group">
+                        <input type="number" name="otp" id="number" onkeyup="validOtp()" placeholder="Enter OTP" >
+                     <span id="otp" class="text-danger"></span>
+                    </div>
+                       <div class="mb-4">
+                           <button type="submit" class="btn btn-primary w-100">SUBMIT</button>
+                       </div>
+                </form>
+                <div>
+                    <div id="resendOtp" class="text-dark">
+                    </div>
+            
+                    <div id="resendButton" style="display: none;">
+                        <a href="/resend-otp">resend otp</a>
+                    </div>
+                </div>
+            </div>
+           </div>
+       </section> 
+       <footer class="main-footer text-center">
+           <p class="font-xs">
+               <script>
+               document.write(new Date().getFullYear())
+               </script> ©, Soles Of Styles .
+           </p>
+           <p class="font-xs mb-30">All rights reserved</p>
+       </footer>
+   </main>
+<script>
+    var errorOtp = document.getElementById('otp')
+   function validOtp() {
+    const otp= document.getElementById('number').value
+    if (otp == "") {
+        errorOtp.innerHTML = "Enter your OTP"
+        return false
+    }
+    if (otp.length < 6 || !otp.match(/^\d*$/)) {
+        errorOtp.innerHTML = "Please Enter the valid OTPr"
+        return false
+    }
+
+    if (otp.length > 6) {
+        errorOtp.innerHTML = "Please Enter the valid OTP"
+        return false
+    }
+    errorOtp.innerHTML = null
+    return true
+}
+
+function validation() {
+    if ( !validOtp()) {
+        return false
+    }
+    return true
+}
+
+</script>
+<script src="javaScripts/resendOtp.js"></script>
