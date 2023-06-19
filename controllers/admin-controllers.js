@@ -10,6 +10,7 @@ const orderHelpers = require('../helpers/orderHelpers')
 const productHelpers = require('../helpers/productHelpers');
 const couponHelpers = require('../helpers/couponHelpers')
 const multer = require('multer');
+const sharp = require('sharp')
 const userHelper = require("../helpers/userHelper");
 const salesHelpers = require('../helpers/salesHelpers');
 
@@ -232,6 +233,20 @@ const addProductsPost = (req,res,next)=>{
           return next(err);
         }
       try{
+        const croppedImages = [];
+
+      for (const file of req.files) {
+        // Perform image cropping using Sharp
+        const croppedImage = await sharp(file.path)
+          .extract({ left: 10, top: 10, width: 200, height: 200 }) // Specify the crop region
+          .toBuffer();
+
+        croppedImages.push({
+          filename: file.filename,
+          mimetype: file.mimetype,
+          buffer: croppedImage,
+        });
+      }
         const newProduct = new Product({
             brand: req.body.brand,
             productname: req.body.productname,
@@ -240,7 +255,7 @@ const addProductsPost = (req,res,next)=>{
             price: req.body.price,
             dealPrice:req.body.dealprice,
             inStock:req.body.stock,
-            images: req.files.map(file => file.filename),
+            images: croppedImages.map(file => file.filename),
             description:req.body.Description
         });
     
@@ -290,6 +305,20 @@ const posteditProduct = async(req,res)=>{
    upload.array('image',5)(req, res, async (err) => {
     try{  
         if(req.files.length > 0){
+            const croppedImages = [];
+
+            for (const file of req.files) {
+              // Perform image cropping using Sharp
+              const croppedImage = await sharp(file.path)
+                .extract({ left: 10, top: 10, width: 200, height: 200 }) // Specify the crop region
+                .toBuffer();
+      
+              croppedImages.push({
+                filename: file.filename,
+                mimetype: file.mimetype,
+                buffer: croppedImage,
+              });
+            }
              const items = await Product.updateOne({_id:req.params.id},{
             brand: req.body.brand,
             productname: req.body.productname,
