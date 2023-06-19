@@ -12,7 +12,7 @@ const app = express();
 
 dotenv.config({ path:'./.env'}); 
           
-
+  
 //Session  
 app.use(session({
   secret:process.env.SESSION_SECRET_KEY ,
@@ -20,7 +20,7 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 } // set cookie options
 })); 
-                 
+                   
                   
 //connecting to database
 const db = process.env.DATABASE_LOCAL;

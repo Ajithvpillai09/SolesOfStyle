@@ -27,42 +27,41 @@ router.get('/logout',userController.logOut);
 
 //OTP CONTROLLER
 router.get('/getotp',middlewares.userAuth,userController.getOtp);
-router.post('/getotp',userController.postOtp);
+router.post('/getotp',middlewares.userAuth,userController.postOtp);
 router.get('/validate-otp',middlewares.userAuth,userController.otpValidate);
-router.post('/validate-otp',userController.postOtpValidate);
+router.post('/validate-otp',middlewares.userAuth,userController.postOtpValidate);
 router.get('/resend-otp',middlewares.userAuth,userController.resendOtp);
 
 
 //USER MANAGEMENT
 router.get('/my-account',middlewares.guestAuth,cartCount.Count,userController.myAccount);
-router.patch('/add-address',userController.addAddress);
+router.patch('/add-address',middlewares.guestAuth,userController.addAddress);
 router.get('/edit-address/:id',middlewares.guestAuth,cartCount.Count,userController.getEditAddress)
-router.patch('/edit-address',userController.patchEditAddress);
-router.delete('/delete-address',userController.deleteAddress)
-router.patch('/edit-profile',userController.editProfile)
-router.patch('/change-password',userController.changePassword)
+router.patch('/edit-address',middlewares.guestAuth,userController.patchEditAddress);
+router.delete('/delete-address',middlewares.guestAuth,userController.deleteAddress)
+router.patch('/edit-profile',middlewares.guestAuth,userController.editProfile)
+router.patch('/change-password',middlewares.guestAuth,userController.changePassword)
 router.get('/add-to-cart/:id',userController.addToCart);
-router.delete('/remove-item',userController.removeItem);
-router.post('/change-quantity',userController.changeCartQuantity);
+router.delete('/remove-item',middlewares.guestAuth,userController.removeItem);
+router.post('/change-quantity',middlewares.guestAuth,userController.changeCartQuantity);
 router.get('/confirm-address',middlewares.guestAuth,cartCount.Count,userController.getDeliveryAddress)
-router.post('/confirm-address',userController.postDeliveryAddress);
-router.post('/get-address-details',userController.getAddressDetails)
-// router.patch('/edit-address-checkout',userController.editAddress)
+router.post('/confirm-address',middlewares.guestAuth,userController.postDeliveryAddress);
+router.post('/get-address-details',middlewares.guestAuth,userController.getAddressDetails)
 
 //APPLY COUPON
-router.post('/apply-coupon',userController.applyCoupon);
-router.patch('/remove-coupon',userController.removeCoupon)
+router.post('/apply-coupon',middlewares.guestAuth,userController.applyCoupon);
+router.patch('/remove-coupon',middlewares.guestAuth,userController.removeCoupon)
 
 //ORDER MANAGEMENT
 router.get('/proceed-to-checkout',middlewares.guestAuth,cartCount.Count,userController.checkOut)
-router.post('/place-order',userController.placeOrder)
-router.post('/verify-payment',userController.verifyPayment)
+router.post('/place-order',middlewares.guestAuth,userController.placeOrder)
+router.post('/verify-payment',middlewares.guestAuth,userController.verifyPayment)
 router.get('/order/:id',middlewares.guestAuth,cartCount.Count,userController.orderDetails)
-router.patch('/cancel-order',userController.cancelOrder)
-router.patch('/return-order',userController.returnOrder)
+router.patch('/cancel-order',middlewares.guestAuth,userController.cancelOrder)
+router.patch('/return-order',middlewares.guestAuth,userController.returnOrder)
 
 //SEARCH RESULT
-router.post('/searchResult',userController.searchResult)
+router.post('/searchResult',userController.searchResult);
 
 
 module.exports = router;   
