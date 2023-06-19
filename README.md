@@ -3,26 +3,26 @@ This is an e-commerce project built using Node.js, MongoDB, and Express. It prov
 
 ## Features
 - Admin Management
- - Login and authentication for admin
- - Admin dashboard to manage the e-commerce platform
- - User management (block/unblock users)
- - Product management (add/edit/delete)
- - Category management 
- - Coupon mangement (add/edit/disable/enable)
- - Order management (change order status/order details)
- - Sales report (pdf/excel)
- - Banner Management
+    - Login and authentication for admin
+    - Admin dashboard to manage the e-commerce platform
+    - User management (block/unblock users)
+    - Product management (add/edit/delete)
+    - Category management 
+    - Coupon mangement (add/edit/disable/enable)
+    - Order management (change order status/order details)
+    - Sales report (pdf/excel)
+    - Banner Management
 
 - User Management
- - User registration and login (otp login/signup)
- - User account to manage personal information and orders
- - Products view (image zoom)
- - Cart(can change quantity based on product stock)
- - Coupon (apply/remove)
- - Order management (cancel/return - within 7 days)
- - Wallet management (money will be credited to user once he cancel or return the product if the payment is done)
- - Payment Option (Cash on delivery, Razorpay, Wallet)
- - Product search
+    - User registration and login (otp login/signup)
+    - User account to manage personal information and orders
+    - Products view (image zoom)
+    - Cart(can change quantity based on product stock)
+    - Coupon (apply/remove)
+    - Order management (cancel/return - within 7 days)
+    - Wallet management (money will be credited to user once he cancel or return the product if the payment is done)
+    - Payment Option (Cash on delivery, Razorpay, Wallet)
+    - Product search
 
 ## Technologies Used
 - HTML
