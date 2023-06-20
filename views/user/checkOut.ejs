@@ -146,7 +146,11 @@
                                     <td class="cart_total_label">Discount</td>
                                     <td class="cart_total_amount" id="discount">₹<%=cartTotal.discount%></td>
                                 </tr>
-                                <%}%>
+                                <%}else{%>
+                                    <tr>
+                                        <td class="cart_total_amount" id="discount" hidden></td>
+                                    </tr>
+                                    <%}%>
                                 <tr>
                                     <td class="cart_total_label">Total</td>
                                     <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand" id="taxWithTotal">₹<%=cartTotal.totalWithTax-cartTotal.discount%></span></strong></td>
