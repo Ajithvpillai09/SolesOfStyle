@@ -576,7 +576,7 @@ const editCatImage = (req,res)=>{
         })
           
     })
-    res.redirect('/admin/banner')
+ 
 
 }
 

@@ -222,7 +222,7 @@ const getAllMenProducts = (req,res)=>{
             perPage = response.perPage;  
             pages = response.pages;
         if(req.session.userLoggedIn){
-            cartCount = req.cartcount;
+            cartCount = req.cartcount; 
             res.render('user/products',{others,userLoggedIn:true,products,category,user,cartCount,pageNum,count,perPage,pages})
         }else{
             res.render('user/products',{others,userLoggedIn:false,products,category,pageNum,count,perPage,pages})

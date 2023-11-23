@@ -781,7 +781,7 @@ $('#editprofile').submit((e)=>{
 $('#changePassword').submit(e=>{
   console.log("haii im changing passsword");
   e.preventDefault()
-  var formData = $('#changePassword').serialize();
+  var formData = $('#changePassword').serialize()
   $.ajax({
     url:'change-password',
     type:'PATCH',
